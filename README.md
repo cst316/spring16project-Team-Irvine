@@ -15,5 +15,7 @@ test push/commit rypinto
 
 test remote branch - rypinto
 
+Testing sync of files - emann1
+
 Enjoy
 Dr. Gary
