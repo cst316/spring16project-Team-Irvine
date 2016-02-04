@@ -15,9 +15,15 @@ test NEW PUSH TO README - rypinto jan 25 733
 
 test push/commit rypinto
 
+<<<<<<< HEAD
 test remote branch - rypinto
 
 Testing sync of files - emann1
 
 Enjoy
+=======
+-Cesar edit  
+
+Enjoy!
+>>>>>>> refs/remotes/origin/master
 Dr. Gary

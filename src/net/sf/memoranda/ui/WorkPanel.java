@@ -18,6 +18,7 @@ import javax.swing.border.Border;
 
 import net.sf.memoranda.util.Context;
 import net.sf.memoranda.util.Local;
+//file modified with Tooltip on icons
 
 /**
  * 
@@ -93,7 +94,7 @@ public class WorkPanel extends JPanel {
 		agendaB.setOpaque(false);
 		agendaB.setMargin(new Insets(0, 0, 0, 0));
 		agendaB.setSelected(true);
-
+        	agendaB.setToolTipText("<html><h6>View your projects, tasks, and events</h6></html>");
 		eventsB.setBackground(Color.white);
 		eventsB.setMaximumSize(new Dimension(60, 80));
 		eventsB.setMinimumSize(new Dimension(30, 30));
@@ -107,6 +108,7 @@ public class WorkPanel extends JPanel {
 		eventsB.setText(Local.getString("Events"));
 		eventsB.setVerticalAlignment(SwingConstants.TOP);
 		eventsB.setVerticalTextPosition(SwingConstants.BOTTOM);
+      eventsB.setToolTipText("<html><h6>Add items to your calendar</h6></html>");
 		eventsB.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				eventsB_actionPerformed(e);
@@ -128,6 +130,7 @@ public class WorkPanel extends JPanel {
 				net.sf.memoranda.ui.AppFrame.class.getResource(
 					"resources/icons/tasks.png")));
 		tasksB.setVerticalTextPosition(SwingConstants.BOTTOM);
+       	tasksB.setToolTipText("<html><h6><center>Create new tasks or"+"<center>Modify existing tasks</h6></html>");
 		tasksB.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				tasksB_actionPerformed(e);
@@ -170,6 +173,7 @@ public class WorkPanel extends JPanel {
 					"resources/icons/notes.png")));
 		notesB.setMargin(new Insets(0, 0, 0, 0));
 		notesB.setSelected(true);
+        	notesB.setToolTipText("<html><h6>Write down anything,<br>" + "<center>I'll hang on to it</h6></html>");
 		this.setPreferredSize(new Dimension(1073, 300));
 
 		filesB.setSelected(true);
@@ -179,6 +183,7 @@ public class WorkPanel extends JPanel {
 				net.sf.memoranda.ui.AppFrame.class.getResource(
 					"resources/icons/files.png")));
 		filesB.setVerticalTextPosition(SwingConstants.BOTTOM);
+        	filesB.setToolTipText("<html><h6>Collect all your sources<br>" + "<center>in one place</h6></html>");
 		filesB.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				filesB_actionPerformed(e);
