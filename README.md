@@ -11,9 +11,19 @@ Also in the docs directory is an initial set of analysis models - class diagrams
 
 Your first steps should be to get your team set up with this code, ensure you can build it and run it. The ant script should work, and you should also be able to run it directly from within Eclipse or the command line or from the .bat/.sh scripts provided. !!
 
+test NEW PUSH TO README - rypinto jan 25 733
+
 test push/commit rypinto
 
+<<<<<<< HEAD
+test remote branch - rypinto
+
+Testing sync of files - emann1
+
+Enjoy
+=======
 -Cesar edit  
 
 Enjoy!
+>>>>>>> refs/remotes/origin/master
 Dr. Gary
