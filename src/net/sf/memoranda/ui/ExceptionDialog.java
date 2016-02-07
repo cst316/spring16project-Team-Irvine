@@ -7,6 +7,7 @@ import java.io.*;
 import net.sf.memoranda.util.*;
 
 /*$Id: ExceptionDialog.java,v 1.2 2004/10/18 19:09:10 ivanrise Exp $*/
+@SuppressWarnings("serial")
 public class ExceptionDialog extends JDialog {
   JPanel panel1 = new JPanel();
   BorderLayout borderLayout1 = new BorderLayout();
