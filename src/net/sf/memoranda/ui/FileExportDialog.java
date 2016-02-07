@@ -14,6 +14,7 @@ import net.sf.memoranda.util.Local;
  *
  * @author  Alex
  */
+@SuppressWarnings("serial")
 public class FileExportDialog extends javax.swing.JDialog {
     
     public boolean CANCELLED = true;
@@ -27,7 +28,8 @@ public class FileExportDialog extends javax.swing.JDialog {
     }
     
    
-    private void initComponents() {//GEN-BEGIN:initComponents
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	private void initComponents() {//GEN-BEGIN:initComponents
         jPanel2 = new javax.swing.JPanel();
         okB = new javax.swing.JButton();
         cancelB = new javax.swing.JButton();
@@ -197,7 +199,8 @@ public class FileExportDialog extends javax.swing.JDialog {
     private javax.swing.JPanel templPanel;
     public javax.swing.JCheckBox usetemplChB;
     public javax.swing.JCheckBox xhtmlChB;
-    public JComboBox encCB;
+    @SuppressWarnings("rawtypes")
+	public JComboBox encCB;
     // End of variables declaration//GEN-END:variables
     
 }
