@@ -47,6 +47,7 @@ public class TaskDialog extends JDialog {
     JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
     JButton cancelB = new JButton();
     JButton okB = new JButton();
+    JButton saveTemplate = new JButton();
     Border border1;
     Border border2;
     JPanel dialogTitlePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -154,6 +155,20 @@ public class TaskDialog extends JDialog {
 				chkEndDate_actionPerformed(e);
 			}
 		});
+
+        /**
+        * Save Template button
+        */
+        saveTemplate.setMaximumSize(new Dimension(180, 26));
+        saveTemplate.setMinimumSize(new Dimension(180, 26));
+        saveTemplate.setPreferredSize(new Dimension(180, 26));
+        saveTemplate.setText(Local.getString("Save as Template"));
+        saveTemplate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                saveTemplate_actionPerformed(e);
+            }
+        });
+
         okB.setMaximumSize(new Dimension(100, 26));
         okB.setMinimumSize(new Dimension(100, 26));
         okB.setPreferredSize(new Dimension(100, 26));
@@ -327,6 +342,7 @@ public class TaskDialog extends JDialog {
         getContentPane().add(mPanel);
         mPanel.add(areaPanel, BorderLayout.CENTER);
         mPanel.add(buttonsPanel, BorderLayout.SOUTH);
+        buttonsPanel.add(saveTemplate, null);
         buttonsPanel.add(okB, null);
         buttonsPanel.add(cancelB, null);
         this.getContentPane().add(dialogTitlePanel, BorderLayout.NORTH);
@@ -401,6 +417,11 @@ public class TaskDialog extends JDialog {
     void okB_actionPerformed(ActionEvent e) {
 	CANCELLED = false;
         this.dispose();
+    }
+
+    void saveTemplate_actionPerformed(ActionEvent e){
+        CANCELLED = false;
+
     }
 
     void cancelB_actionPerformed(ActionEvent e) {
