@@ -305,6 +305,58 @@ public class FileStorage implements Storage {
         //tasklistDoc.setDocType(TaskListVersioning.getCurrentDocType());
         saveDocument(tasklistDoc,JN_DOCPATH + prj.getID() + File.separator + ".tasklist");
     }
+
+    /**
+    * Method: openTemplateTaskList
+    * Inputs: Project   the project the template is being store too
+    * Returns:TaskList  the saved tasklist
+    *
+    * opens the stored the templates to a document 
+    * cavitia316
+    */
+    public TaskList openTemplateTaskList(Project prj) {
+        String fn = JN_DOCPATH + prj.getID() + File.separator + ".templateTasklist";
+
+        if (documentExists(fn)) {
+            /*DEBUG*/
+            System.out.println(
+                "[DEBUG] Open task list: "
+                    + JN_DOCPATH
+                    + prj.getID()
+                    + File.separator
+                    + ".templateTasklist");
+            
+            Document tasklistDoc = openDocument(fn);
+            return new TaskListImpl(tasklistDoc, prj);   
+        }
+        else {
+            /*DEBUG*/
+            System.out.println("[DEBUG] New task list created");
+            return new TaskListImpl(prj);
+        }
+    }
+
+    /**
+    * Method: storeTemplateTaskList
+    * Inputs: TaskList  the template to be stored
+    *         Project   the project the template is being store too
+    * Returns:Void
+    *
+    * Stores the templates to a document 
+    * cavitia316
+    */
+    public void storeTemplateTaskList(TaskList templateTaskList, Project prj){
+        /*DEBUG*/
+        System.out.println(
+            "[DEBUG] Save task list: "
+                + JN_DOCPATH
+                + prj.getID()
+                + File.separator
+                + ".templateTasklist");
+        Document templateTasklistDoc = templateTaskList.getXMLContent();
+        saveDocument(templateTasklistDoc,JN_DOCPATH + prj.getID() + File.separator + ".templateTasklist");
+    }
+
     /**
      * @see net.sf.memoranda.util.Storage#createProjectStorage(net.sf.memoranda.Project)
      */
