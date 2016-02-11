@@ -455,15 +455,15 @@ public class TaskDialog extends JDialog {
     * cavitia316
     */
     void saveTemplate_actionPerformed(ActionEvent e){
-        CANCELLED = false;
+        CANCELLED = true;
         Point loc = App.getFrame().getLocation();
         Dimension frmSize = App.getFrame().getSize();
         this.startDate.getModel().setValue(CurrentDate.get().getDate());
         this.endDate.getModel().setValue(CurrentDate.get().getDate());
         this.setLocation((frmSize.width - this.getSize().width) / 2 + loc.x, (frmSize.height - this.getSize().height) / 2 + loc.y);
         this.setVisible(true);
-        if (this.CANCELLED)
-            return;
+        /*if (this.CANCELLED)
+            return;*/
         CalendarDate sd = new CalendarDate((Date) this.startDate.getModel().getValue());
         CalendarDate ed;
         if(this.chkEndDate.isSelected())

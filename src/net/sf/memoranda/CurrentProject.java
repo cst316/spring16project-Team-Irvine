@@ -82,7 +82,9 @@ public class CurrentProject {
     }
 
     /**
-    * returns the template task list
+    * Method: getTemplateTaskList
+    * Inputs: N/A
+    * Return: the task list containing the templates
     */
     public static TaskList getTemplateTaskList(){
         return _templateTaskList;
