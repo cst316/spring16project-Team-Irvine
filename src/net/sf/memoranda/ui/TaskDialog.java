@@ -63,7 +63,7 @@ public class TaskDialog extends JDialog {
     JButton okB = new JButton();
     //added jbutton and combo box
     JButton saveTemplate = new JButton();
-    /**debug task #56 **/
+    JButton load = new JButton();
     JComboBox templateList = new JComboBox((Vector)CurrentProject.getTemplateTaskList().getTopLevelTasks());
     Border border1;
     Border border2;
@@ -185,6 +185,20 @@ public class TaskDialog extends JDialog {
         saveTemplate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 saveTemplate_actionPerformed(e);
+            }
+        });
+
+        /**
+        * Load Template Button
+        * added by cavitia316
+        */
+        load.setMaximumSize(new Dimension(100, 26));
+        load.setMinimumSize(new Dimension(100, 26));
+        load.setPreferredSize(new Dimension(100, 26));
+        load.setText(Local.getString("Load"));
+        load.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                load_actionPerformed(e);
             }
         });
 
@@ -375,6 +389,9 @@ public class TaskDialog extends JDialog {
         //Add Template List
         jPanel8.add(templateLabel, null);
         jPanel8.add(templateList, null);
+        jPanel8.add(load, null);
+        /** end debug task #57 **/
+
         jPanel8.add(todoField, null);
         jPanel8.add(jLabelDescription);
         jPanel8.add(descriptionScrollPane, null);
@@ -462,8 +479,7 @@ public class TaskDialog extends JDialog {
         this.endDate.getModel().setValue(CurrentDate.get().getDate());
         this.setLocation((frmSize.width - this.getSize().width) / 2 + loc.x, (frmSize.height - this.getSize().height) / 2 + loc.y);
         this.setVisible(true);
-        /*if (this.CANCELLED)
-            return;*/
+
         CalendarDate sd = new CalendarDate((Date) this.startDate.getModel().getValue());
         CalendarDate ed;
         if(this.chkEndDate.isSelected())
@@ -474,6 +490,18 @@ public class TaskDialog extends JDialog {
         Task newTask = CurrentProject.getTemplateTaskList().createTask(sd, ed, this.todoField.getText(), this.priorityCB.getSelectedIndex(),effort, this.descriptionField.getText(),null);
         newTask.setProgress(((Integer)this.progress.getValue()).intValue());
         CurrentStorage.get().storeTemplateTaskList(CurrentProject.getTemplateTaskList(), CurrentProject.get());
+    }
+
+    /**
+    * Method: load_actionPerformed
+    * Inputs: ActionEvent e button being pressed
+    * returns: void
+    *
+    * Populates the taskDialog panel
+    * cavitia316
+    */
+    void load_actionPerformed(ActionEvent e){
+
 
     }
 
