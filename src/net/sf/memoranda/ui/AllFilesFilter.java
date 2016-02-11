@@ -32,6 +32,7 @@ public class AllFilesFilter extends FileFilter {
     public static final String JAR = "JAR";
     public static final String ICO = "ICO";
     public static final String WAV = "WAV";
+    public static final String ICS = "ICS";//RW
 
     String _type = "";
     /**
@@ -63,6 +64,8 @@ public class AllFilesFilter extends FileFilter {
             return (ext.equals("xhtml") || ext.equals("xml"));
         else if (_type.equals(ICO))
             return (ext.equals("ico") || ext.equals("png"));
+        else if (_type.equals(ICS))//RW
+                return (ext.equals("ics"));//RW
         return ext.startsWith("htm");
     }
 
@@ -80,6 +83,8 @@ public class AllFilesFilter extends FileFilter {
             return "JAR " + Local.getString("Files") + " (*.jar)";
         else if (_type.equals(WAV))
             return Local.getString("Sound files") + " (*.wav, *.au)";
+        else if (_type.equals(ICS))//RW
+            return Local.getString("Calendar files") + " (*.ics)";//RW
         else if (_type.equals(XHTML))
             return "XHTML files (*.xhtml, *.xml)";
         else if (_type.equals(ICO))

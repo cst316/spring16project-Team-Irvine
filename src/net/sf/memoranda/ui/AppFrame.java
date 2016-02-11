@@ -1,3 +1,9 @@
+/**
+ * File: AppFrame.java
+ * Author: Rudi Wever
+ * Date: February 10, 2016
+ * Description: GUI definition and property settings for Memoranda Project
+ */
 package net.sf.memoranda.ui;
 
 import java.awt.AWTEvent;
@@ -51,6 +57,7 @@ import net.sf.memoranda.util.Local;
 import net.sf.memoranda.util.ProjectExporter;
 import net.sf.memoranda.util.ProjectPackager;
 import net.sf.memoranda.util.Util;
+import net.sf.memoranda.util.WriteIcsFile;//RW
 import nu.xom.Builder;
 import nu.xom.Document;
 import nu.xom.Element;
@@ -62,8 +69,11 @@ import nu.xom.Elements;
  * Copyright (c) 2003 Memoranda Team. http://memoranda.sf.net
  */
 
-/*$Id: AppFrame.java,v 1.33 2005/07/05 08:17:24 alexeya Exp $*/
-
+/**
+ * Class: AppFrame
+ * Description: defines the elements for the Memoranda GUI.
+ *
+ */
 public class AppFrame extends JFrame {
 
     JPanel contentPane;
@@ -102,6 +112,23 @@ public class AppFrame extends JFrame {
             doPrjUnPack();
         }
     };
+    
+    /**
+     * Method: prjExportProjAction
+     * Inputs: none
+     * Returns: none
+     * Description: defining an action when prjExportProjAction button occurs 
+     */
+	// RW for user story - 16 Export Calendar
+    public Action prjExportProjAction = new AbstractAction("Export projects") {
+        public void actionPerformed(ActionEvent e) {
+        	try{
+                doPrjExport();
+        	} catch (Exception e1){
+        		e1.printStackTrace();
+        	}
+        }
+    };//RW
 
     public Action minimizeAction = new AbstractAction("Close the window") {
         public void actionPerformed(ActionEvent e) {
@@ -142,6 +169,7 @@ public class AppFrame extends JFrame {
         JMenuItem jMenuFileNewNote = new JMenuItem(workPanel.dailyItemsPanel.editorPanel.newAction);
     JMenuItem jMenuFilePackPrj = new JMenuItem(prjPackAction);
     JMenuItem jMenuFileUnpackPrj = new JMenuItem(prjUnpackAction);
+    JMenuItem jMenuFileXportPrj = new JMenuItem(prjExportProjAction);//RW 
     JMenuItem jMenuFileExportPrj = new JMenuItem(exportNotesAction);
     JMenuItem jMenuFileImportPrj = new JMenuItem(importNotesAction);
     JMenuItem jMenuFileImportNote = new JMenuItem(importOneNoteAction);
@@ -332,6 +360,7 @@ public class AppFrame extends JFrame {
         jMenuFileNewPrj.setAction(projectsPanel.newProjectAction);
 
         jMenuFileUnpackPrj.setText(Local.getString("Unpack project") + "...");
+        jMenuFileXportPrj.setText(Local.getString("Eport projects") + "...");//RW
         jMenuFileExportNote.setText(Local.getString("Export current note")
                 + "...");
         jMenuFileImportNote.setText(Local.getString("Import one note")
@@ -451,6 +480,7 @@ public class AppFrame extends JFrame {
         jMenuFile.add(jMenuFilePackPrj);
         jMenuFile.add(jMenuFileUnpackPrj);
         jMenuFile.addSeparator();
+        jMenuFile.add(jMenuFileXportPrj);//RW
         jMenuFile.add(jMenuFileExportPrj);
         jMenuFile.add(jMenuFileExportNote);
         jMenuFile.add(jMenuFileImportNote);
@@ -830,6 +860,58 @@ public class AppFrame extends JFrame {
         projectsPanel.prjTablePanel.updateUI();
     }
 
+    /**
+     * Method: doPrjExport
+     * Inputs: none
+     * Returns: output file to be imported into a calendar program
+     * Description: presents a file chooser dialouge to allow user to select
+     * a destination folder and the name of the file in which to generate the
+     * project calendar data.
+     * @throws Exception
+     */
+    public void doPrjExport() throws Exception {
+    	// RW for user story - 16 Export Calendar
+        UIManager.put("FileChooser.lookInLabelText", Local
+                .getString("Look in:"));
+        UIManager.put("FileChooser.upFolderToolTipText", Local.getString(
+                "Up One Level"));
+        UIManager.put("FileChooser.newFolderToolTipText", Local.getString(
+                "Create New Folder"));
+        UIManager.put("FileChooser.listViewButtonToolTipText", Local
+                .getString("List"));
+        UIManager.put("FileChooser.detailsViewButtonToolTipText", Local
+                .getString("Details"));
+        UIManager.put("FileChooser.fileNameLabelText", Local.getString(
+                "File Name:"));
+        UIManager.put("FileChooser.filesOfTypeLabelText", Local.getString(
+                "Files of Type:"));
+        UIManager.put("FileChooser.openButtonText", Local.getString("Export"));
+        UIManager.put("FileChooser.openButtonToolTipText", Local.getString(
+                "Export to selected file"));
+        UIManager
+                .put("FileChooser.cancelButtonText", Local.getString("Cancel"));
+        UIManager.put("FileChooser.cancelButtonToolTipText", Local.getString(
+                "Cancel"));
+
+        JFileChooser chooser = new JFileChooser();
+        chooser.setFileHidingEnabled(false);
+        chooser.setDialogTitle(Local.getString("Export projects"));
+        chooser.setAcceptAllFileFilterUsed(false);
+        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        chooser.addChoosableFileFilter(new AllFilesFilter(AllFilesFilter.ICS));
+        String lastSel = (String)Context.get("LAST_SELECTED_EXPORT_FILE");
+        if (lastSel != null){
+        	chooser.setCurrentDirectory(new File(lastSel));
+        }
+        chooser.setPreferredSize(new Dimension(550, 375));
+
+        if (chooser.showOpenDialog(this) != JFileChooser.APPROVE_OPTION)
+            return;
+        Context.put("LAST_SELECTED_PACK_FILE", chooser.getSelectedFile());        
+        java.io.File f = chooser.getSelectedFile();
+        new WriteIcsFile(f);
+    }//RW
+    
     public void showPreferences() {
         PreferencesDialog dlg = new PreferencesDialog(this);
         dlg.pack();
