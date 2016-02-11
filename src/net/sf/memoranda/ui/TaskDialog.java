@@ -501,8 +501,13 @@ public class TaskDialog extends JDialog {
     * cavitia316
     */
     void load_actionPerformed(ActionEvent e){
-
-
+        Task selectedTemplate = (Task)templateList.getSelectedItem();
+        this.todoField.setText(selectedTemplate.getText());
+        this.descriptionField.setText(selectedTemplate.getDescription());
+        this.startDate.getModel().setValue(selectedTemplate.getStartDate().getDate());
+        this.endDate.getModel().setValue(selectedTemplate.getEndDate().getDate());
+        this.priorityCB.setSelectedIndex(selectedTemplate.getPriority());                
+        this.effortField.setText(Util.getHoursFromMillis(selectedTemplate.getEffort()));
     }
 
     void cancelB_actionPerformed(ActionEvent e) {
