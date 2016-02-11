@@ -39,7 +39,6 @@ public class WriteIcsFile {
 				calendarData.addEvent(individualProj.getTitle(), individualProj.getStartDate());
 			}
 		}
-		if (allProj.size() > 0){
 			Writer writer = null;
 			try {
 				String fName = f.toString();
@@ -62,7 +61,6 @@ public class WriteIcsFile {
 			}
 
 			calendarData.generateIcs();
-		}
 	}
 	
 	private ArrayList<Projects> allProj;
