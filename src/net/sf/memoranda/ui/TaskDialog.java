@@ -497,10 +497,11 @@ public class TaskDialog extends JDialog {
 
         CalendarDate sd = new CalendarDate((Date) this.startDate.getModel().getValue());
         CalendarDate ed;
-        if(this.chkEndDate.isSelected())
+        if(this.chkEndDate.isSelected()){
             ed = new CalendarDate((Date) this.endDate.getModel().getValue());
-        else
+        }else{
             ed = null;
+        }
         long effort = Util.getMillisFromHours(this.effortField.getText());
         Task newTask = CurrentProject.getTemplateTaskList().createTask(sd, ed, this.todoField.getText(), this.priorityCB.getSelectedIndex(),effort, this.descriptionField.getText(),null);
         newTask.setProgress(((Integer)this.progress.getValue()).intValue());
