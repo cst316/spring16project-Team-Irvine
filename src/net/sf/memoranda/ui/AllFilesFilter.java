@@ -47,25 +47,27 @@ public class AllFilesFilter extends FileFilter {
      * @see javax.swing.filechooser.FileFilter#accept(java.io.File)
      */
     public boolean accept(File f) {
-        if (f.isDirectory())
+        if (f.isDirectory()){
             return true;
+        }
         String ext = getExtension(f);
-        if (_type.equals(RTF))
+        if (_type.equals(RTF)){
             return ext.equals("rtf");
-        else if (_type.equals(ZIP))
+        }else if (_type.equals(ZIP)){
             return ext.equals("zip");
-        else if (_type.equals(EXE))
+        }else if (_type.equals(EXE)){
             return (ext.equals("exe") || ext.equals("com") || ext.equals("bat"));
-        else if (_type.equals(JAR))
+        }else if (_type.equals(JAR)){
             return ext.equals("jar");
-        else if (_type.equals(WAV))
+        }else if (_type.equals(WAV)){
             return (ext.equals("wav") || ext.equals("au"));
-        else if (_type.equals(XHTML))
+        }else if (_type.equals(XHTML)){
             return (ext.equals("xhtml") || ext.equals("xml"));
-        else if (_type.equals(ICO))
+        }else if (_type.equals(ICO)){
             return (ext.equals("ico") || ext.equals("png"));
-        else if (_type.equals(ICS))//RW
+        }else if (_type.equals(ICS)){//RW
                 return (ext.equals("ics"));//RW
+        }
         return ext.startsWith("htm");
     }
 
@@ -73,22 +75,23 @@ public class AllFilesFilter extends FileFilter {
      * @see javax.swing.filechooser.FileFilter#getDescription()
      */
     public String getDescription() {
-        if (_type.equals(RTF))
+        if (_type.equals(RTF)){
             return "Rich Text Format (*.rtf)";
-        else if (_type.equals(ZIP))
+        }else if (_type.equals(ZIP)){
             return "ZIP archives (*.zip)";
-        else if (_type.equals(EXE))
+        }else if (_type.equals(EXE)){
             return Local.getString("Executable Files") + " (*.exe, *.com, *.bat)";
-        else if (_type.equals(JAR))
+        }else if (_type.equals(JAR)){
             return "JAR " + Local.getString("Files") + " (*.jar)";
-        else if (_type.equals(WAV))
+        }else if (_type.equals(WAV)){
             return Local.getString("Sound files") + " (*.wav, *.au)";
-        else if (_type.equals(ICS))//RW
+        }else if (_type.equals(ICS)){//RW
             return Local.getString("Calendar files") + " (*.ics)";//RW
-        else if (_type.equals(XHTML))
+        }else if (_type.equals(XHTML)){
             return "XHTML files (*.xhtml, *.xml)";
-        else if (_type.equals(ICO))
+        }else if (_type.equals(ICO)){
             return Local.getString("Icon") + " " + Local.getString("Files") + " (*.ico, *.png)";
+        }
         return "HTML files (*.html, *.htm)";
     }
 

@@ -22,8 +22,7 @@ public class Ics {
 	 * Description: Initializes VCALENDAR object with a VCALENDAR header
 	 */
 	Ics (){
-		outputLines = "BEGIN:VCALENDAR\r\n" + "PRODID:-//Memoranda:Rudi Wever//EN\r\n"+
-				"VERSION:2.0\r\n";
+		outputLines = "BEGIN:VCALENDAR\r\n" + "PRODID:-//Memoranda:Rudi Wever//EN\r\n" + "VERSION:2.0\r\n";
 	}
 	
 	/**
@@ -87,15 +86,13 @@ public class Ics {
 		month = month + 1;
 		if (month <= 9){
 			yyyymmdd += "0" + month;
-		}
-		else{
+		}else{
 			yyyymmdd += "" + month;
 		}
 		day = date.getDay();
 		if (day <= 9){
 			yyyymmdd += "0" + day;
-		}
-		else{
+		}else{
 			yyyymmdd += "" + day;
 		}		
 

@@ -14,51 +14,51 @@ import net.sf.memoranda.date.CalendarDate;
 public class Projects {
 
 	public CalendarDate getEndDate() {
-			return endDate;
-		}
+		return endDate;
+	}
 	
-		public String getId() {
-			return id;
-		}
-		
-		public CalendarDate getStartDate() {
-			return startDate;
-		}
-		
-		public String getTitle() {
-			return title;
-		}
-		
-		public void setEndDate(CalendarDate endDate) {
-			this.endDate = endDate;
-		}
-		
-		public void setId(String id) {
-			this.id = id;
-		}
+	public String getId() {
+		return id;
+	}
+	
+	public CalendarDate getStartDate() {
+		return startDate;
+	}
+	
+	public String getTitle() {
+		return title;
+	}
+	
+	public void setEndDate(CalendarDate endDate) {
+		this.endDate = endDate;
+	}
+	
+	public void setId(String id) {
+		this.id = id;
+	}
 
-		public void setStartDate(CalendarDate startDate) {
-			this.startDate = startDate;
-		}
+	public void setStartDate(CalendarDate startDate) {
+		this.startDate = startDate;
+	}
 
-		public void setTitle(String title) {
-			this.title = title;
-		}
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
-		@Override
-		/**
-		 * Method: toString
-		 * Inputs: none
-		 * Returns: Project title, start date, end date
-		 * Description: displays project title, start date, end date
-		 */
-		public String toString() {
-			return "Title:" + title + ", Start Date:" + startDate + ", End Date:" + endDate;
-		}
-		
-		private String id;
-		private String title;
-		private CalendarDate startDate;
-		private CalendarDate endDate;
-	};
+	@Override
+	/**
+	 * Method: toString
+	 * Inputs: none
+	 * Returns: Project title, start date, end date
+	 * Description: displays project title, start date, end date
+	 */
+	public String toString() {
+		return "Title:" + title + ", Start Date:" + startDate + ", End Date:" + endDate;
+	}
+	
+	private String id;
+	private String title;
+	private CalendarDate startDate;
+	private CalendarDate endDate;
+};
 

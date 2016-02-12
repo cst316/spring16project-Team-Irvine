@@ -13,6 +13,8 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 
+import net.sf.memoranda.ui.ExceptionDialog;
+
 /**
  * Class: WriteIcsFile
  * Description: Writes the current content of the VCALENDAR object to a file
@@ -34,8 +36,7 @@ public class WriteIcsFile {
 			Projects individualProj = allProj.get(idx);
 			if ((individualProj.getEndDate())!= null){
 			calendarData.addEvent(individualProj.getTitle(), individualProj.getStartDate(), individualProj.getEndDate());
-			} 
-			else{
+			}else{
 				calendarData.addEvent(individualProj.getTitle(), individualProj.getStartDate());
 			}
 		}
@@ -44,19 +45,18 @@ public class WriteIcsFile {
 				String fName = f.toString();
 				if (fName.toLowerCase().endsWith(".ics")){
 					writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f),"utf-8"));
-				}
-				else {
+				}else {
 					writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f+".ics"),"utf-8"));
 				}
 				writer.write(calendarData.generateIcs());
 
 			} catch (IOException e){
-				
+				new ExceptionDialog(e);
 			} finally{
 				try{
 					writer.close();
 				} catch (Exception ex){
-					
+					new ExceptionDialog(ex);
 				}
 			}
 
