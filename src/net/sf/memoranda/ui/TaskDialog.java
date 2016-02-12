@@ -53,6 +53,9 @@ import net.sf.memoranda.CurrentProject;
 import net.sf.memoranda.date.CalendarDate;
 import net.sf.memoranda.util.Local;
 import java.util.Vector;
+import javax.swing.BoxLayout;
+import java.awt.Dialog.ModalityType;
+import java.awt.Insets;
 
 /*$Id: TaskDialog.java,v 1.25 2005/12/01 08:12:26 alexeya Exp $*/
 public class TaskDialog extends JDialog {
@@ -67,7 +70,7 @@ public class TaskDialog extends JDialog {
     JComboBox templateList = new JComboBox((Vector)CurrentProject.getTemplateTaskList().getTopLevelTasks());
     Border border1;
     Border border2;
-    JPanel dialogTitlePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    JPanel dialogTitlePanel = new JPanel();
     JLabel header = new JLabel();
     public boolean CANCELLED = true;
     JPanel jPanel8 = new JPanel(new GridBagLayout());
@@ -125,6 +128,7 @@ public class TaskDialog extends JDialog {
 	CalendarDate startDateMax = CurrentProject.get().getEndDate();
 	CalendarDate endDateMin = startDateMin;
 	CalendarDate endDateMax = startDateMax;
+	private final JPanel panel = new JPanel();
     
     public TaskDialog(Frame frame, String title) {
         super(frame, title, true);
@@ -192,15 +196,6 @@ public class TaskDialog extends JDialog {
         * Load Template Button
         * added by cavitia316
         */
-        load.setMaximumSize(new Dimension(100, 26));
-        load.setMinimumSize(new Dimension(100, 26));
-        load.setPreferredSize(new Dimension(100, 26));
-        load.setText(Local.getString("Load"));
-        load.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                load_actionPerformed(e);
-            }
-        });
 
         okB.setMaximumSize(new Dimension(100, 26));
         okB.setMinimumSize(new Dimension(100, 26));
@@ -217,13 +212,6 @@ public class TaskDialog extends JDialog {
         areaPanel.setBorder(border2);
         dialogTitlePanel.setBackground(Color.WHITE);
         dialogTitlePanel.setBorder(border4);
-        //dialogTitlePanel.setMinimumSize(new Dimension(159, 52));
-        //dialogTitlePanel.setPreferredSize(new Dimension(159, 52));
-        header.setFont(new java.awt.Font("Dialog", 0, 20));
-        header.setForeground(new Color(0, 0, 124));
-        header.setText(Local.getString("To do"));
-        header.setIcon(new ImageIcon(net.sf.memoranda.ui.TaskDialog.class.getResource(
-            "resources/icons/task48.png")));
         
         GridBagLayout gbLayout = (GridBagLayout) jPanel8.getLayout();
         jPanel8.setBorder(border3);
@@ -238,9 +226,6 @@ public class TaskDialog extends JDialog {
         jLabelDescription.setMaximumSize(new Dimension(100, 16));
         jLabelDescription.setMinimumSize(new Dimension(60, 16));
         jLabelDescription.setText(Local.getString("Description"));
-        templateLabel.setMaximumSize(new Dimension(100, 16));
-        templateLabel.setMinimumSize(new Dimension(60, 16));
-        templateLabel.setText(Local.getString("Choose a Template: "));
         gbCon = new GridBagConstraints();
         gbCon.gridwidth = GridBagConstraints.REMAINDER;
         gbCon.weighty = 1;
@@ -383,13 +368,26 @@ public class TaskDialog extends JDialog {
         buttonsPanel.add(okB, null);
         buttonsPanel.add(cancelB, null);
         this.getContentPane().add(dialogTitlePanel, BorderLayout.NORTH);
-        dialogTitlePanel.add(header, null);
+        GridBagLayout gbl_dialogTitlePanel = new GridBagLayout();
+        gbl_dialogTitlePanel.columnWidths = new int[]{103, 297, 0};
+        gbl_dialogTitlePanel.rowHeights = new int[]{48, 0};
+        gbl_dialogTitlePanel.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+        gbl_dialogTitlePanel.rowWeights = new double[]{0.0, Double.MIN_VALUE};
+        dialogTitlePanel.setLayout(gbl_dialogTitlePanel);
+        //dialogTitlePanel.setMinimumSize(new Dimension(159, 52));
+        //dialogTitlePanel.setPreferredSize(new Dimension(159, 52));
+        header.setFont(new java.awt.Font("Dialog", 0, 20));
+        header.setForeground(new Color(0, 0, 124));
+        header.setText(Local.getString("To do"));
+        header.setIcon(new ImageIcon(net.sf.memoranda.ui.TaskDialog.class.getResource(
+            "resources/icons/task48.png")));
+        GridBagConstraints gbc_header = new GridBagConstraints();
+        gbc_header.anchor = GridBagConstraints.NORTHWEST;
+        gbc_header.insets = new Insets(0, 0, 0, 5);
+        gbc_header.gridx = 0;
+        gbc_header.gridy = 0;
+        dialogTitlePanel.add(header, gbc_header);
         areaPanel.add(jPanel8, BorderLayout.NORTH);
-        /**debug task # 57 **/
-        //Add Template List
-        jPanel8.add(templateLabel, null);
-        jPanel8.add(templateList, null);
-        jPanel8.add(load, null);
         /** end debug task #57 **/
 
         jPanel8.add(todoField, null);
@@ -422,6 +420,23 @@ public class TaskDialog extends JDialog {
         jPanel2.add(jPanelProgress);
         
         priorityCB.setSelectedItem(Local.getString("Normal"));
+        mPanel.add(panel, BorderLayout.NORTH);
+        panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        panel.add(templateLabel);
+        templateLabel.setMaximumSize(new Dimension(100, 16));
+        templateLabel.setMinimumSize(new Dimension(60, 16));
+        templateLabel.setText(Local.getString("Choose a Template: "));
+        panel.add(templateList);
+        panel.add(load);
+        load.setMaximumSize(new Dimension(100, 26));
+        load.setMinimumSize(new Dimension(100, 26));
+        load.setPreferredSize(new Dimension(100, 26));
+        load.setText(Local.getString("Load"));
+        load.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                load_actionPerformed(e);
+            }
+        });
         startCalFrame.cal.addSelectionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (ignoreStartChanged)
