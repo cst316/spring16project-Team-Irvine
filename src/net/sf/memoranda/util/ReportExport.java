@@ -26,6 +26,7 @@ import net.sf.memoranda.TaskImpl;
 import net.sf.memoranda.TaskList;
 import net.sf.memoranda.TaskListImpl;
 import net.sf.memoranda.date.CalendarDate;
+import net.sf.memoranda.ui.ExceptionDialog;
 import net.sf.memoranda.ui.ProjectsPanel;
 import net.sf.memoranda.ui.ProjectsTablePanel;
 /**
@@ -50,8 +51,13 @@ public class ReportExport {
 		Vector<Task> activeTasks, completedTasks, overdueTasks;
 		Vector<Note> notes;
 		String output = "";
+		String projectReportData = "";
+		String notesOutput = "";
 		
-		projects = ProjectManager.getAllProjects();
+		
+		projects = ProjectManager.getAllProjects(); 
+		
+		//compile project data for output
 		for(Project prj : projects ){
 			switch(prj.getStatus()){
 			case(Project.ACTIVE):
@@ -60,42 +66,100 @@ public class ReportExport {
 				overdueTasks = getFailedTasks(prj);
 				activeTasks = getActiveTasks(prj);
 				completedTasks = getCompletedTasks(prj);
-				output += compileReport(prj, notes, todaysEvents, overdueTasks, activeTasks, completedTasks);
+				projectReportData += compileReport(prj, todaysEvents, overdueTasks, activeTasks, completedTasks);
 				break;
 			case(Project.COMPLETED):
-				output += System.lineSeparator() + prj.getTitle()
+				projectReportData += System.lineSeparator() + prj.getTitle()
 						+ System.lineSeparator() + "\tCOMPLETED"
 						+ System.lineSeparator() + prj.getEndDate().toString();
 				// report project as completed
 				break;
 			case(Project.FAILED):
-				output += System.lineSeparator() + prj.getTitle()
+				projectReportData += System.lineSeparator() + prj.getTitle()
 						+ System.lineSeparator() + "\tFAILED";
 				// report project as failed
 				break;
 			case(Project.FROZEN):
-				output += System.lineSeparator() + prj.getTitle()
+				projectReportData += System.lineSeparator() + prj.getTitle()
 						+ System.lineSeparator() + "\tFROZEN";
 				// report project as frozen
 				break;
 			case(Project.SCHEDULED):
-				output += System.lineSeparator() + prj.getTitle()
+				projectReportData += System.lineSeparator() + prj.getTitle()
 						+ System.lineSeparator() + "\tSCHEDULED"
 						+ System.lineSeparator() + "Begins on " + prj.getStartDate().toString();
 				// report project as scheduled at give start date
 				break;
 			}
-			
+			notes = getNotes(prj);
+			for(Note nte : notes){
+				notesOutput += nte.getTitle()
+							+ System.lineSeparator() + nte.getDate()
+							+ System.lineSeparator() + nte.getProject().getTitle()
+							+ System.lineSeparator();
+			}
+			projectReportData += System.lineSeparator()
+								+ System.lineSeparator() + "Notes:" 
+								+ System.lineSeparator() + notesOutput + System.lineSeparator();
 		}
+		// compile notes for output
+		
+		output = "Report For " + CalendarDate.today().getFullDateString() + System.lineSeparator()
+				+ System.lineSeparator()
+				+ projectReportData + System.lineSeparator() 
+				+ System.lineSeparator() + "Notes"
+				+ System.lineSeparator() + notesOutput;
+		//write to file
+		try{
+			FileWriter fw = new FileWriter(file);
+			
+			fw.write(output);
+			fw.close();
+		}catch(Exception ex){
+            new ExceptionDialog(ex, "Failed to write to " + file, "");
+            return;
+		}
+		
 	}
-	private static String compileReport(Project prj, Vector<Note> notes, Vector<Event> todaysEvents,
+	private static String compileReport(Project prj, Vector<Event> todaysEvents,
 			Vector<Task> overdueTasks, Vector<Task> activeTasks, Vector<Task> completedTasks) {
-		String out = prj.getTitle()
+		String out = "";
+		String project = prj.getTitle()
 					+ System.lineSeparator() + prj.getStartDate()
 					+ System.lineSeparator() + prj.getStatus()
 					+ System.lineSeparator() + "Total Progress: " + getProgress((TaskList) CurrentStorage.get().openTaskList(prj).getTopLevelTasks());
-		
-		
+		String events, overdue, active, completed;
+		//list today's events
+		events = "";
+		for(int i = 0; i < todaysEvents.size(); i++){
+			events += todaysEvents.get(i).getText() + "\t" + todaysEvents.get(i).getTimeString() + System.lineSeparator();
+		}
+		overdue = "";
+		for(int i = 0; i < overdueTasks.size(); i++){
+			overdue += overdueTasks.get(i).getText() 
+					+ "PRIORITY: " + overdueTasks.get(i).getPriority()
+					+ "Was Due On: " + overdueTasks.get(i).getEndDate().getFullDateString() + System.lineSeparator();
+		}
+		active = "";
+		for(int i = 0; i < activeTasks.size(); i++){
+			active += activeTasks.get(i).getText() 
+					+ "PRIORITY: " + activeTasks.get(i).getPriority()
+					+ "Is Due On: " + activeTasks.get(i).getEndDate().getFullDateString()
+					+ "Percent Complete: " + activeTasks.get(i).getProgress() + "%" + System.lineSeparator();
+		}
+		completed = "";
+		for(int i = 0; i < completedTasks.size(); i++){
+			completed += completedTasks.get(i).getText() + System.lineSeparator();
+		}
+		out = project + System.lineSeparator() 
+			+ System.lineSeparator() + "Today's Events:" 
+			+ System.lineSeparator() + events + System.lineSeparator()
+			+ System.lineSeparator() + "Overdue Tasks:"
+			+ System.lineSeparator() + overdue + System.lineSeparator()
+			+ System.lineSeparator() + "Active Tasks:"
+			+ System.lineSeparator() + active + System.lineSeparator()
+			+ System.lineSeparator() + "Completed Tasks:"
+			+ System.lineSeparator() + completed;
 		return out;
 	}
 	private static Vector getActiveTasks(Project prj){
