@@ -50,6 +50,7 @@ import net.sf.memoranda.util.CurrentStorage;
 import net.sf.memoranda.util.Local;
 import net.sf.memoranda.util.ProjectExporter;
 import net.sf.memoranda.util.ProjectPackager;
+import net.sf.memoranda.util.ReportExport;
 import net.sf.memoranda.util.Util;
 import nu.xom.Builder;
 import nu.xom.Document;
@@ -115,6 +116,19 @@ public class AppFrame extends JFrame {
         }
     };
     
+    /**
+     * Method: 	generateReportAction
+     * Inputs: 	N/A
+     * Returns: An actionPermored when the user selects the key
+     * 	
+     * Allows the user to generate a report from the file menu
+     */
+    public Action generateReportAction = new AbstractAction("Generate Report") {
+        public void actionPerformed(ActionEvent e) {
+            ReportExport.generateReport(new File("ProjectReport.txt"));
+        }
+    };
+    
     public Action exportNotesAction =
                 new AbstractAction(Local.getString("Export notes") + "...") {
 
@@ -139,14 +153,14 @@ public class AppFrame extends JFrame {
         };
     
     JMenuItem jMenuFileNewPrj = new JMenuItem();
-        JMenuItem jMenuFileNewNote = new JMenuItem(workPanel.dailyItemsPanel.editorPanel.newAction);
+    JMenuItem jMenuFileNewNote = new JMenuItem(workPanel.dailyItemsPanel.editorPanel.newAction);
     JMenuItem jMenuFilePackPrj = new JMenuItem(prjPackAction);
     JMenuItem jMenuFileUnpackPrj = new JMenuItem(prjUnpackAction);
     JMenuItem jMenuFileExportPrj = new JMenuItem(exportNotesAction);
+    JMenuItem jMenuFileGenerateReport = new JMenuItem(generateReportAction);
     JMenuItem jMenuFileImportPrj = new JMenuItem(importNotesAction);
     JMenuItem jMenuFileImportNote = new JMenuItem(importOneNoteAction);
-    JMenuItem jMenuFileExportNote = new JMenuItem(
-            workPanel.dailyItemsPanel.editorPanel.exportAction);
+    JMenuItem jMenuFileExportNote = new JMenuItem(workPanel.dailyItemsPanel.editorPanel.exportAction);
     JMenuItem jMenuFileMin = new JMenuItem(minimizeAction);
 
     JMenuItem jMenuItem1 = new JMenuItem();
@@ -360,6 +374,7 @@ public class AppFrame extends JFrame {
         jMenuEditFind.setText(Local.getString("Find & replace") + "...");
 
         jMenuEditPref.setText(Local.getString("Preferences") + "...");
+        jMenuFileGenerateReport.setText(Local.getString("Generate Report"));
 
         jMenuInsert.setText(Local.getString("Insert"));
 
@@ -446,7 +461,7 @@ public class AppFrame extends JFrame {
 
         toolBar.add(jButton3);
         jMenuFile.add(jMenuFileNewPrj);
-                jMenuFile.add(jMenuFileNewNote);
+        jMenuFile.add(jMenuFileNewNote);
         jMenuFile.addSeparator();
         jMenuFile.add(jMenuFilePackPrj);
         jMenuFile.add(jMenuFileUnpackPrj);
@@ -455,6 +470,8 @@ public class AppFrame extends JFrame {
         jMenuFile.add(jMenuFileExportNote);
         jMenuFile.add(jMenuFileImportNote);
         jMenuFile.add(jMenuFileImportPrj);
+        jMenuFile.addSeparator();
+        jMenuFile.add(jMenuFileGenerateReport);
         jMenuFile.addSeparator();
         jMenuFile.add(jMenuEditPref);
         jMenuFile.addSeparator();
