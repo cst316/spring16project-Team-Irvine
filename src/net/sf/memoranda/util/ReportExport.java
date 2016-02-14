@@ -124,10 +124,9 @@ public class ReportExport {
 	private static String compileReport(Project prj, Vector<Event> todaysEvents,
 			Vector<Task> overdueTasks, Vector<Task> activeTasks, Vector<Task> completedTasks) {
 		String out = "";
-		String project = prj.getTitle()
-					+ System.lineSeparator() + prj.getStartDate()
-					+ System.lineSeparator() + prj.getStatus()
-					+ System.lineSeparator() + "Total Progress: " + getProgress((TaskList) CurrentStorage.get().openTaskList(prj).getTopLevelTasks());
+		String project = prj.getTitle() + System.lineSeparator() + prj.getStartDate().getShortDateString();
+		project += System.lineSeparator() + prj.getStatus();
+		project += System.lineSeparator() + "Total Progress: " + getProgress((Vector)CurrentStorage.get().openTaskList(prj).getAllSubTasks(null));
 		String events, overdue, active, completed;
 		//list today's events
 		events = "";
@@ -207,8 +206,8 @@ public class ReportExport {
 		return ret;
 	}
 
-	private static int getProgress(TaskList tl) {
-		Vector v = (Vector) tl.getAllSubTasks(null);
+	private static int getProgress(Vector v) {
+		//Vector v = (Vector) tl;
 		if (v.size() == 0)
 			return -1;
 		int p = 0;

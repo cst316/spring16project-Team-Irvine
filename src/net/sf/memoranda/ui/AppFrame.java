@@ -125,7 +125,17 @@ public class AppFrame extends JFrame {
      */
     public Action generateReportAction = new AbstractAction("Generate Report") {
         public void actionPerformed(ActionEvent e) {
-            ReportExport.generateReport(new File("ProjectReport.txt"));
+        	String userDir = System.getProperty("user.home");
+        	JFileChooser fileChooser = new JFileChooser(userDir + "/Desktop");
+        	fileChooser.setDialogTitle("Generate Report");   
+        	 
+        	int userSelection = fileChooser.showSaveDialog(AppFrame.this);
+        	 
+        	if (userSelection == JFileChooser.APPROVE_OPTION) {
+        	    File fileToSave = fileChooser.getSelectedFile();
+        	    ReportExport.generateReport(fileToSave);
+        	}
+            
         }
     };
     
