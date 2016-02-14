@@ -10,10 +10,23 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.Point;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import net.sf.memoranda.date.CalendarDate;
+import net.sf.memoranda.date.CurrentDate;
+import net.sf.memoranda.date.DateListener;
+import net.sf.memoranda.Task;
+import net.sf.memoranda.TaskList;
+import net.sf.memoranda.date.CalendarDate;
+import net.sf.memoranda.date.CurrentDate;
+import net.sf.memoranda.date.DateListener;
+import net.sf.memoranda.util.Context;
+import net.sf.memoranda.util.CurrentStorage;
+import net.sf.memoranda.util.Local;
+import net.sf.memoranda.util.Util;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -39,6 +52,10 @@ import javax.swing.JCheckBox;
 import net.sf.memoranda.CurrentProject;
 import net.sf.memoranda.date.CalendarDate;
 import net.sf.memoranda.util.Local;
+import java.util.Vector;
+import javax.swing.BoxLayout;
+import java.awt.Dialog.ModalityType;
+import java.awt.Insets;
 
 /*$Id: TaskDialog.java,v 1.25 2005/12/01 08:12:26 alexeya Exp $*/
 public class TaskDialog extends JDialog {
@@ -47,9 +64,13 @@ public class TaskDialog extends JDialog {
     JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
     JButton cancelB = new JButton();
     JButton okB = new JButton();
+    //added jbutton and combo box
+    JButton saveTemplate = new JButton();
+    JButton load = new JButton();
+    JComboBox templateList = new JComboBox((Vector)CurrentProject.getTemplateTaskList().getTopLevelTasks());
     Border border1;
     Border border2;
-    JPanel dialogTitlePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    JPanel dialogTitlePanel = new JPanel();
     JLabel header = new JLabel();
     public boolean CANCELLED = true;
     JPanel jPanel8 = new JPanel(new GridBagLayout());
@@ -95,6 +116,7 @@ public class TaskDialog extends JDialog {
     // added by rawsushi
     JLabel jLabelEffort = new JLabel();
     JLabel jLabelDescription = new JLabel();
+    JLabel templateLabel = new JLabel();
 	JCheckBox chkEndDate = new JCheckBox();
 	
 	JPanel jPanelProgress = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -106,6 +128,7 @@ public class TaskDialog extends JDialog {
 	CalendarDate startDateMax = CurrentProject.get().getEndDate();
 	CalendarDate endDateMin = startDateMin;
 	CalendarDate endDateMax = startDateMax;
+	private final JPanel panel = new JPanel();
     
     public TaskDialog(Frame frame, String title) {
         super(frame, title, true);
@@ -154,6 +177,26 @@ public class TaskDialog extends JDialog {
 				chkEndDate_actionPerformed(e);
 			}
 		});
+
+        /**
+        * Save Template button
+        * added by cavitia316
+        */
+        saveTemplate.setMaximumSize(new Dimension(180, 26));
+        saveTemplate.setMinimumSize(new Dimension(180, 26));
+        saveTemplate.setPreferredSize(new Dimension(180, 26));
+        saveTemplate.setText(Local.getString("Save as Template"));
+        saveTemplate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                saveTemplate_actionPerformed(e);
+            }
+        });
+
+        /**
+        * Load Template Button
+        * added by cavitia316
+        */
+
         okB.setMaximumSize(new Dimension(100, 26));
         okB.setMinimumSize(new Dimension(100, 26));
         okB.setPreferredSize(new Dimension(100, 26));
@@ -169,13 +212,6 @@ public class TaskDialog extends JDialog {
         areaPanel.setBorder(border2);
         dialogTitlePanel.setBackground(Color.WHITE);
         dialogTitlePanel.setBorder(border4);
-        //dialogTitlePanel.setMinimumSize(new Dimension(159, 52));
-        //dialogTitlePanel.setPreferredSize(new Dimension(159, 52));
-        header.setFont(new java.awt.Font("Dialog", 0, 20));
-        header.setForeground(new Color(0, 0, 124));
-        header.setText(Local.getString("To do"));
-        header.setIcon(new ImageIcon(net.sf.memoranda.ui.TaskDialog.class.getResource(
-            "resources/icons/task48.png")));
         
         GridBagLayout gbLayout = (GridBagLayout) jPanel8.getLayout();
         jPanel8.setBorder(border3);
@@ -327,11 +363,33 @@ public class TaskDialog extends JDialog {
         getContentPane().add(mPanel);
         mPanel.add(areaPanel, BorderLayout.CENTER);
         mPanel.add(buttonsPanel, BorderLayout.SOUTH);
+        //Save template button added by cavitia316
+        buttonsPanel.add(saveTemplate, null);
         buttonsPanel.add(okB, null);
         buttonsPanel.add(cancelB, null);
         this.getContentPane().add(dialogTitlePanel, BorderLayout.NORTH);
-        dialogTitlePanel.add(header, null);
+        GridBagLayout gbl_dialogTitlePanel = new GridBagLayout();
+        gbl_dialogTitlePanel.columnWidths = new int[]{103, 297, 0};
+        gbl_dialogTitlePanel.rowHeights = new int[]{48, 0};
+        gbl_dialogTitlePanel.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+        gbl_dialogTitlePanel.rowWeights = new double[]{0.0, Double.MIN_VALUE};
+        dialogTitlePanel.setLayout(gbl_dialogTitlePanel);
+        //dialogTitlePanel.setMinimumSize(new Dimension(159, 52));
+        //dialogTitlePanel.setPreferredSize(new Dimension(159, 52));
+        header.setFont(new java.awt.Font("Dialog", 0, 20));
+        header.setForeground(new Color(0, 0, 124));
+        header.setText(Local.getString("To do"));
+        header.setIcon(new ImageIcon(net.sf.memoranda.ui.TaskDialog.class.getResource(
+            "resources/icons/task48.png")));
+        GridBagConstraints gbc_header = new GridBagConstraints();
+        gbc_header.anchor = GridBagConstraints.NORTHWEST;
+        gbc_header.insets = new Insets(0, 0, 0, 5);
+        gbc_header.gridx = 0;
+        gbc_header.gridy = 0;
+        dialogTitlePanel.add(header, gbc_header);
         areaPanel.add(jPanel8, BorderLayout.NORTH);
+        /** end debug task #57 **/
+
         jPanel8.add(todoField, null);
         jPanel8.add(jLabelDescription);
         jPanel8.add(descriptionScrollPane, null);
@@ -362,6 +420,23 @@ public class TaskDialog extends JDialog {
         jPanel2.add(jPanelProgress);
         
         priorityCB.setSelectedItem(Local.getString("Normal"));
+        mPanel.add(panel, BorderLayout.NORTH);
+        panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        panel.add(templateLabel);
+        templateLabel.setMaximumSize(new Dimension(100, 16));
+        templateLabel.setMinimumSize(new Dimension(60, 16));
+        templateLabel.setText(Local.getString("Choose a Template: "));
+        panel.add(templateList);
+        panel.add(load);
+        load.setMaximumSize(new Dimension(100, 26));
+        load.setMinimumSize(new Dimension(100, 26));
+        load.setPreferredSize(new Dimension(100, 26));
+        load.setText(Local.getString("Load"));
+        load.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                load_actionPerformed(e);
+            }
+        });
         startCalFrame.cal.addSelectionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (ignoreStartChanged)
@@ -399,8 +474,56 @@ public class TaskDialog extends JDialog {
 	}
 	
     void okB_actionPerformed(ActionEvent e) {
-	CANCELLED = false;
+        CANCELLED = false;
         this.dispose();
+    }
+
+    /**
+    * Method: saveTemplate_actionPerformed
+    * Inputs: ActionEvent e button being pressed
+    * returns: void
+    *
+    * Saves the template settings to the template task list
+    * cavitia316
+    */
+    void saveTemplate_actionPerformed(ActionEvent e){
+        CANCELLED = true;
+        Point loc = App.getFrame().getLocation();
+        Dimension frmSize = App.getFrame().getSize();
+        this.startDate.getModel().setValue(CurrentDate.get().getDate());
+        this.endDate.getModel().setValue(CurrentDate.get().getDate());
+        this.setLocation((frmSize.width - this.getSize().width) / 2 + loc.x, (frmSize.height - this.getSize().height) / 2 + loc.y);
+        this.setVisible(true);
+
+        CalendarDate sd = new CalendarDate((Date) this.startDate.getModel().getValue());
+        CalendarDate ed;
+        if(this.chkEndDate.isSelected()){
+            ed = new CalendarDate((Date) this.endDate.getModel().getValue());
+        }else{
+            ed = null;
+        }
+        long effort = Util.getMillisFromHours(this.effortField.getText());
+        Task newTask = CurrentProject.getTemplateTaskList().createTask(sd, ed, this.todoField.getText(), this.priorityCB.getSelectedIndex(),effort, this.descriptionField.getText(),null);
+        newTask.setProgress(((Integer)this.progress.getValue()).intValue());
+        CurrentStorage.get().storeTemplateTaskList(CurrentProject.getTemplateTaskList(), CurrentProject.get());
+    }
+
+    /**
+    * Method: load_actionPerformed
+    * Inputs: ActionEvent e button being pressed
+    * returns: void
+    *
+    * Populates the taskDialog panel
+    * cavitia316
+    */
+    void load_actionPerformed(ActionEvent e){
+        Task selectedTemplate = (Task)templateList.getSelectedItem();
+        this.todoField.setText(selectedTemplate.getText());
+        this.descriptionField.setText(selectedTemplate.getDescription());
+        this.startDate.getModel().setValue(selectedTemplate.getStartDate().getDate());
+        this.endDate.getModel().setValue(selectedTemplate.getEndDate().getDate());
+        this.priorityCB.setSelectedIndex(selectedTemplate.getPriority());                
+        this.effortField.setText(Util.getHoursFromMillis(selectedTemplate.getEffort()));
     }
 
     void cancelB_actionPerformed(ActionEvent e) {
