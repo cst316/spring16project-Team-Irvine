@@ -18,7 +18,8 @@ import javax.swing.border.Border;
 
 import net.sf.memoranda.util.Context;
 import net.sf.memoranda.util.Local;
-//file modified with Tooltip on icons
+
+//file modified with Tooltip on icons  by Rudi Wever
 
 /**
  * 
@@ -51,15 +52,9 @@ public class WorkPanel extends JPanel {
 	}
 
 	void jbInit() throws Exception {
-		border1 =
-			BorderFactory.createCompoundBorder(
-				BorderFactory.createBevelBorder(
-					BevelBorder.LOWERED,
-					Color.white,
-					Color.white,
-					new Color(124, 124, 124),
-					new Color(178, 178, 178)),
-				BorderFactory.createEmptyBorder(0, 2, 0, 0));
+		border1 = BorderFactory.createCompoundBorder(BorderFactory
+				.createBevelBorder(BevelBorder.LOWERED, Color.white, Color.white, 
+						new Color(124, 124, 124), new Color(178, 178, 178)), BorderFactory.createEmptyBorder(0, 2, 0, 0));
 
 		this.setLayout(borderLayout1);
 		toolBar.setOrientation(JToolBar.VERTICAL);
@@ -87,14 +82,11 @@ public class WorkPanel extends JPanel {
 				agendaB_actionPerformed(e);
 			}
 		});
-		agendaB.setIcon(
-			new ImageIcon(
-				net.sf.memoranda.ui.AppFrame.class.getResource(
-					"resources/icons/agenda.png")));
+		agendaB.setIcon(new ImageIcon(net.sf.memoranda.ui.AppFrame.class.getResource("resources/icons/agenda.png")));
 		agendaB.setOpaque(false);
 		agendaB.setMargin(new Insets(0, 0, 0, 0));
 		agendaB.setSelected(true);
-        	agendaB.setToolTipText("<html><h6>View your projects, tasks, and events</h6></html>");
+    	agendaB.setToolTipText("<html><h6>View your projects, tasks, and events</h6></html>");
 		eventsB.setBackground(Color.white);
 		eventsB.setMaximumSize(new Dimension(60, 80));
 		eventsB.setMinimumSize(new Dimension(30, 30));
@@ -108,16 +100,13 @@ public class WorkPanel extends JPanel {
 		eventsB.setText(Local.getString("Events"));
 		eventsB.setVerticalAlignment(SwingConstants.TOP);
 		eventsB.setVerticalTextPosition(SwingConstants.BOTTOM);
-      eventsB.setToolTipText("<html><h6>Add items to your calendar</h6></html>");
+		eventsB.setToolTipText("<html><h6>Add items to your calendar</h6></html>");
 		eventsB.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				eventsB_actionPerformed(e);
 			}
 		});
-		eventsB.setIcon(
-			new ImageIcon(
-				net.sf.memoranda.ui.AppFrame.class.getResource(
-					"resources/icons/events.png")));
+		eventsB.setIcon(new ImageIcon(net.sf.memoranda.ui.AppFrame.class.getResource("resources/icons/events.png")));
 		eventsB.setOpaque(false);
 		eventsB.setMargin(new Insets(0, 0, 0, 0));
 		//eventsB.setSelected(true);
@@ -125,12 +114,9 @@ public class WorkPanel extends JPanel {
 		tasksB.setSelected(true);
 		tasksB.setFont(new java.awt.Font("Dialog", 1, 10));
 		tasksB.setMargin(new Insets(0, 0, 0, 0));
-		tasksB.setIcon(
-			new ImageIcon(
-				net.sf.memoranda.ui.AppFrame.class.getResource(
-					"resources/icons/tasks.png")));
+		tasksB.setIcon(new ImageIcon(net.sf.memoranda.ui.AppFrame.class.getResource("resources/icons/tasks.png")));
 		tasksB.setVerticalTextPosition(SwingConstants.BOTTOM);
-       	tasksB.setToolTipText("<html><h6><center>Create new tasks or"+"<center>Modify existing tasks</h6></html>");
+       	tasksB.setToolTipText("<html><h6><center>Create new tasks or" + "<center>Modify existing tasks</h6></html>");
 		tasksB.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				tasksB_actionPerformed(e);
@@ -167,23 +153,17 @@ public class WorkPanel extends JPanel {
 				notesB_actionPerformed(e);
 			}
 		});
-		notesB.setIcon(
-			new ImageIcon(
-				net.sf.memoranda.ui.AppFrame.class.getResource(
-					"resources/icons/notes.png")));
+		notesB.setIcon(new ImageIcon(net.sf.memoranda.ui.AppFrame.class.getResource("resources/icons/notes.png")));
 		notesB.setMargin(new Insets(0, 0, 0, 0));
 		notesB.setSelected(true);
-        	notesB.setToolTipText("<html><h6>Write down anything,<br>" + "<center>I'll hang on to it</h6></html>");
+    	notesB.setToolTipText("<html><h6>Write down anything,<br>" + "<center>I'll hang on to it</h6></html>");
 		this.setPreferredSize(new Dimension(1073, 300));
 
 		filesB.setSelected(true);
 		filesB.setMargin(new Insets(0, 0, 0, 0));
-		filesB.setIcon(
-			new ImageIcon(
-				net.sf.memoranda.ui.AppFrame.class.getResource(
-					"resources/icons/files.png")));
+		filesB.setIcon(new ImageIcon(net.sf.memoranda.ui.AppFrame.class.getResource("resources/icons/files.png")));
 		filesB.setVerticalTextPosition(SwingConstants.BOTTOM);
-        	filesB.setToolTipText("<html><h6>Collect all your sources<br>" + "<center>in one place</h6></html>");
+    	filesB.setToolTipText("<html><h6>Collect all your sources<br>" + "<center>in one place</h6></html>");
 		filesB.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				filesB_actionPerformed(e);
@@ -224,14 +204,15 @@ public class WorkPanel extends JPanel {
 
 	public void selectPanel(String pan) {
 		if (pan != null) {
-			if (pan.equals("NOTES"))
+			if (pan.equals("NOTES")){
 				notesB_actionPerformed(null);
-			else if (pan.equals("TASKS"))
+			}else if (pan.equals("TASKS")){
 				tasksB_actionPerformed(null);
-			else if (pan.equals("EVENTS"))
+			}else if (pan.equals("EVENTS")){
 				eventsB_actionPerformed(null);
-			else if (pan.equals("FILES"))
+			}else if (pan.equals("FILES")){
 				filesB_actionPerformed(null);
+			}
 		}
 	}
 
