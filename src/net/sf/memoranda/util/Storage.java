@@ -21,6 +21,9 @@ public interface Storage {
             
     TaskList openTaskList(Project prj);    
     void storeTaskList(TaskList tl, Project prj);
+
+    TaskList openTemplateTaskList(Project prj);
+    void storeTemplateTaskList(TaskList templateTaskList, Project pr);
     
     NoteList openNoteList(Project prj);
     void storeNoteList(NoteList nl, Project prj);

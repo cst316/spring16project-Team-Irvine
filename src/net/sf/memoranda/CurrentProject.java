@@ -26,6 +26,8 @@ public class CurrentProject {
 
     private static Project _project = null;
     private static TaskList _tasklist = null;
+    //task template list
+    private static TaskList _templateTaskList = null;
     private static NoteList _notelist = null;
     private static ResourcesList _resources = null;
     private static Vector projectListeners = new Vector();
@@ -44,13 +46,16 @@ public class CurrentProject {
 			// alexeya: Fixed bug with NullPointer when LAST_OPENED_PROJECT_ID
 			// references to missing project
 			_project = ProjectManager.getProject("__default");
-			if (_project == null) 
-				_project = (Project)ProjectManager.getActiveProjects().get(0);						
+			if (_project == null) {
+				_project = (Project)ProjectManager.getActiveProjects().get(0);
+			}
             Context.put("LAST_OPENED_PROJECT_ID", _project.getID());
 			
 		}		
 		
         _tasklist = CurrentStorage.get().openTaskList(_project);
+        //initialize template tasklist
+        _templateTaskList = CurrentStorage.get().openTemplateTaskList(_project);
         _notelist = CurrentStorage.get().openNoteList(_project);
         _resources = CurrentStorage.get().openResourcesList(_project);
         AppFrame.addExitListener(new ActionListener() {
@@ -66,25 +71,38 @@ public class CurrentProject {
     }
 
     public static TaskList getTaskList() {
-            return _tasklist;
+        return _tasklist;
     }
 
     public static NoteList getNoteList() {
-            return _notelist;
+        return _notelist;
     }
     
     public static ResourcesList getResourcesList() {
-            return _resources;
+    	return _resources;
+    }
+
+    /**
+    * Method: getTemplateTaskList
+    * Inputs: N/A
+    * Return: the task list containing the templates
+    */
+    public static TaskList getTemplateTaskList(){
+        return _templateTaskList;
     }
 
     public static void set(Project project) {
-        if (project.getID().equals(_project.getID())) return;
+        if (project.getID().equals(_project.getID())) {
+        	return;
+        }
         TaskList newtasklist = CurrentStorage.get().openTaskList(project);
+        TaskList newTemplateTaskList = CurrentStorage.get().openTemplateTaskList(project);
         NoteList newnotelist = CurrentStorage.get().openNoteList(project);
         ResourcesList newresources = CurrentStorage.get().openResourcesList(project);
         notifyListenersBefore(project, newnotelist, newtasklist, newresources);
         _project = project;
         _tasklist = newtasklist;
+        _templateTaskList = newTemplateTaskList;
         _notelist = newnotelist;
         _resources = newresources;
         notifyListenersAfter();
@@ -117,6 +135,7 @@ public class CurrentProject {
 
         storage.storeNoteList(_notelist, _project);
         storage.storeTaskList(_tasklist, _project); 
+        storage.storeTemplateTaskList(_templateTaskList, _project);
         storage.storeResourcesList(_resources, _project);
         storage.storeProjectManager();
     }
@@ -124,6 +143,7 @@ public class CurrentProject {
     public static void free() {
         _project = null;
         _tasklist = null;
+        _templateTaskList = null;
         _notelist = null;
         _resources = null;
     }

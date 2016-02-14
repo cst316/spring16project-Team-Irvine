@@ -11,6 +11,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
@@ -23,6 +26,7 @@ import net.sf.memoranda.ui.App;
 import net.sf.memoranda.ui.AppFrame;
 import net.sf.memoranda.ui.ExceptionDialog;
 import java.util.Random;
+import java.awt.Desktop;
 
 /**
  *
@@ -92,21 +96,53 @@ public class Util {
     public static String getCDATA(String s) {
       return "<![CDATA["+s+"]]>";
     }
-    
-    public static void runBrowser(String url) {
-        if (!checkBrowser())
-            return;
-        String commandLine = MimeTypesList.getAppList().getBrowserExec()+" "+url;
-        System.out.println("Run: " + commandLine);
+/**
+ * Method: runBrowser
+ * Inputs:
+ * @param url	URI address to open as URI
+ * Returns:	N/A
+ * 
+ * Description: Opens URI address in default system browser
+ */
+    public static void runBrowser(URI uri){
+    	Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+        if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+            try {
+                desktop.browse(uri);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+/**
+ * Method: runBrowser
+ * Inputs:
+ * @param url	URI address to open as URL
+ * Returns:	N/A
+ * 
+ * Description: Converts URL to a URI format
+ */
+    public static void runBrowser(URL url) {
         try {
-            /*DEBUG*/
-            Runtime.getRuntime().exec(commandLine);
+            runBrowser(url.toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
         }
-        catch (Exception ex) {
-            new ExceptionDialog(ex, "Failed to run an external web-browser application with commandline<br><code>"
-                    +commandLine+"</code>", "Check the application path and command line parameters " +
-                    		"(File-&gt;Preferences-&gt;Resource types).");
-        }
+    }
+/**
+ * Method: runBrowser
+ * Inputs:
+ * @param url	URI address to open as string
+ * Returns:	N/A
+ * 
+ * Description: Converts string URL to a URI format
+ */
+    public static void runBrowser(String url){
+    	try{
+    		runBrowser(new URI(url));
+    	}catch(URISyntaxException e){
+    		e.printStackTrace();
+    	}
     }
     
     public static boolean checkBrowser() {
