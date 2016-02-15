@@ -167,9 +167,6 @@ public class AppFrame extends JFrame {
             
         }
     };
-    
-    public Action exportNotesAction =
-                new AbstractAction(Local.getString("Export notes") + "...") {
 
     public Action exportNotesAction = new AbstractAction(Local.getString("Export notes") + "...") {
 
