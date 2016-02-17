@@ -1,5 +1,7 @@
 package net.sf.memoranda.tests;
 
+import org.junit.Assert.*;
+
 import static org.junit.Assert.*;
 
 import org.junit.After;
@@ -44,7 +46,7 @@ public class CalendarDateTest {
 	@Test
 	public void beforeTest() {
 		assertTrue(cd1.before(cd2));
-		assertTrue(cd2.before(cd1)); //Pass with assertFalse
+		assertFalse(cd2.before(cd1)); //Pass with assertFalse
 	}
 	
 	@Test
