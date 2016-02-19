@@ -2,7 +2,14 @@ package net.sf.memoranda.ui;
 
 import java.awt.Dimension;
 import java.awt.Frame;
+import java.awt.Image;
+import java.awt.MenuItem;
+import java.awt.PopupMenu;
+import java.awt.SystemTray;
 import java.awt.Toolkit;
+import java.awt.TrayIcon;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Calendar;
 
 import javax.swing.ImageIcon;
@@ -138,10 +145,59 @@ public class App {
 
 	}
 
+/**
+ * Method: closeWindow
+ * Inputs: N/A
+ * Returns: N/A
+ *
+ * Description: Closes Memoranda
+ */
 	public static void closeWindow() {
 		if (frame == null)
 			return;
 		frame.dispose();
+	}
+/**
+ * Method: hidetoTray
+ * Inputs: N/A
+ * Returns: N/A
+ *
+ * Description: Allows Memoranda to minimize to the system tray if capable
+ */
+	public static void hideToTray(){
+		
+		if(Configuration.get("Window Minimize Action").equals("yes")){
+			if(SystemTray.isSupported()){
+				TrayIcon trayIcon;
+				SystemTray tray;
+				System.out.println("Minimize to tray");
+				tray = SystemTray.getSystemTray();
+								
+				Image image=Toolkit.getDefaultToolkit().getImage("/lib/icons/memoranda.ico");
+	            ActionListener exitListener=new ActionListener() {
+	                public void actionPerformed(ActionEvent e) {
+	                    System.out.println("Exiting....");
+	                    System.exit(0);
+	                }
+	            };
+	            PopupMenu popup=new PopupMenu();
+	            MenuItem defaultItem=new MenuItem("Exit");
+	            defaultItem.addActionListener(exitListener);
+	            popup.add(defaultItem);
+	            defaultItem=new MenuItem("Open");
+	            defaultItem.addActionListener(new ActionListener() {
+	                public void actionPerformed(ActionEvent e) {
+	                    frame.setVisible(true);
+	                    frame.setExtendedState(JFrame.NORMAL);
+	                }
+	            });
+	            popup.add(defaultItem);
+	            trayIcon=new TrayIcon(image, "Memoranda", popup);
+	            trayIcon.setImageAutoSize(true);
+	        }else{
+	            System.out.println("system tray not supported");
+	        }
+		}
 	}
 
 	/**

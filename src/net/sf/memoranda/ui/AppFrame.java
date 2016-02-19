@@ -61,6 +61,7 @@ import nu.xom.Builder;
 import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Elements;
+import sun.security.krb5.Config;
 
 
 /**
@@ -133,9 +134,9 @@ public class AppFrame extends JFrame {
         }
     };//RW
 
-    public Action minimizeAction = new AbstractAction("Close the window") {
+    public Action closeAction = new AbstractAction("Close the window") {
         public void actionPerformed(ActionEvent e) {
-            doMinimize();
+            doClose();
         }
     };
 
@@ -198,7 +199,7 @@ public class AppFrame extends JFrame {
     JMenuItem jMenuFileImportPrj = new JMenuItem(importNotesAction);
     JMenuItem jMenuFileImportNote = new JMenuItem(importOneNoteAction);
     JMenuItem jMenuFileExportNote = new JMenuItem(workPanel.dailyItemsPanel.editorPanel.exportAction);
-    JMenuItem jMenuFileMin = new JMenuItem(minimizeAction);
+    JMenuItem jMenuFileMin = new JMenuItem(closeAction);
 
     JMenuItem jMenuItem1 = new JMenuItem();
     JMenuItem jMenuEditUndo = new JMenuItem(editor.undoAction);
@@ -663,6 +664,7 @@ public class AppFrame extends JFrame {
     
     //File | Exit action performed
     public void doExit() {
+    	System.out.println("EXITING");
         if (Configuration.get("ASK_ON_EXIT").equals("yes")) {
             Dimension frmSize = this.getSize();
             Point loc = this.getLocation();
@@ -684,9 +686,14 @@ public class AppFrame extends JFrame {
         System.exit(0);
     }
 
-    public void doMinimize() {
-        exitNotify();
-        App.closeWindow();
+    public void doClose() {
+    	if(Configuration.get("ON_MINIMIZE").equals("normal")){
+    		System.out.println("minimize");
+    	}else{
+    		System.out.println("exit");
+        	exitNotify();
+        	App.closeWindow();
+    	}
     }
 
     //Help | About action performed
@@ -703,14 +710,22 @@ public class AppFrame extends JFrame {
     protected void processWindowEvent(WindowEvent e) {
         if (e.getID() == WindowEvent.WINDOW_CLOSING) {
             if (Configuration.get("ON_CLOSE").equals("exit")){
+            	System.out.println("exit application");
                 doExit();
             }else{
-            	doMinimize();
+            	System.out.println("close window");
+            	doClose();
             }
         }else if ((e.getID() == WindowEvent.WINDOW_ICONIFIED)) {
-            super.processWindowEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+            if(Configuration.get("ON_MINIMIZE").equals("normal")){
+            	System.out.println("hide to tray");
+            	App.hideToTray();
+            }else{
+            	System.out.println("close window");
+            	doClose();
+            }
 
-            doMinimize();
+            doClose();
         }else{
             super.processWindowEvent(e);
         }
