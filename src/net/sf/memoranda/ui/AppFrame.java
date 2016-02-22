@@ -78,6 +78,8 @@ import nu.xom.Elements;
 
 public class AppFrame extends JFrame {
 
+	final int minFrameSizeWidth = 1024;
+	final int minFrameSizeHeight = 500;
     JPanel contentPane;
     JMenuBar menuBar = new JMenuBar();
     JMenu jMenuFile = new JMenu();
@@ -647,6 +649,10 @@ public class AppFrame extends JFrame {
             }
         });
 
+        Dimension minFrameSize = new Dimension();
+        minFrameSize.width = minFrameSizeWidth;
+        minFrameSize.height = minFrameSizeHeight;
+        this.setMinimumSize(minFrameSize);
     }
    
     protected void jMenuHelpBug_actionPerformed(ActionEvent e){
@@ -715,7 +721,7 @@ public class AppFrame extends JFrame {
             super.processWindowEvent(e);
         }
     }
-
+    
     @SuppressWarnings("unchecked")
 	public static void addExitListener(ActionListener al) {
         exitListeners.add(al);
