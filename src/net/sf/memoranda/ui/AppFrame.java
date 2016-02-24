@@ -78,8 +78,8 @@ import nu.xom.Elements;
 
 public class AppFrame extends JFrame {
 
-	final int minFrameSizeWidth = 1024;
-	final int minFrameSizeHeight = 500;
+	final int MINFRAMESIZEWIDTH = 1024;
+	final int MINFRAMESIZEHEIGHT = 500;
     JPanel contentPane;
     JMenuBar menuBar = new JMenuBar();
     JMenu jMenuFile = new JMenu();
@@ -650,8 +650,8 @@ public class AppFrame extends JFrame {
         });
 
         Dimension minFrameSize = new Dimension();
-        minFrameSize.width = minFrameSizeWidth;
-        minFrameSize.height = minFrameSizeHeight;
+        minFrameSize.width = MINFRAMESIZEWIDTH;
+        minFrameSize.height = MINFRAMESIZEHEIGHT;
         this.setMinimumSize(minFrameSize);
     }
    
