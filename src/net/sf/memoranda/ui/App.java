@@ -1,5 +1,6 @@
 package net.sf.memoranda.ui;
 
+import java.awt.AWTException;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Image;
@@ -150,33 +151,35 @@ public class App {
  * Inputs: N/A
  * Returns: N/A
  *
- * Description: Closes Memoranda
+ * Description: Closes Memoranda --- EXITS
  */
 	public static void closeWindow() {
-		if (frame == null)
+		if (frame == null){
 			return;
+		}
 		frame.dispose();
 	}
 /**
- * Method: hidetoTray
- * Inputs: N/A
+ * Method: doMinimize
+ * Inputs: 
+@param toTray	toSystem tray or not
  * Returns: N/A
  *
  * Description: Allows Memoranda to minimize to the system tray if capable
  */
-	public static void hideToTray(){
-		
-		if(Configuration.get("Window Minimize Action").equals("yes")){
+	public static void doMinimize(boolean toTray){
+		System.out.println("ACTION: " + Configuration.get("ON_MINIMIZE").toString());
+		if(toTray){
 			if(SystemTray.isSupported()){
 				TrayIcon trayIcon;
 				SystemTray tray;
 				System.out.println("Minimize to tray");
 				tray = SystemTray.getSystemTray();
 								
-				Image image=Toolkit.getDefaultToolkit().getImage("/lib/icons/memoranda.ico");
+				Image image = new ImageIcon(AppFrame.class.getResource("resources/icons/jnotes16.png")).getImage();
 	            ActionListener exitListener=new ActionListener() {
 	                public void actionPerformed(ActionEvent e) {
-	                    System.out.println("Exiting....");
+	                    System.out.println("Exiting...");
 	                    System.exit(0);
 	                }
 	            };
@@ -185,15 +188,26 @@ public class App {
 	            defaultItem.addActionListener(exitListener);
 	            popup.add(defaultItem);
 	            defaultItem=new MenuItem("Open");
-	            defaultItem.addActionListener(new ActionListener() {
-	                public void actionPerformed(ActionEvent e) {
-	                    frame.setVisible(true);
-	                    frame.setExtendedState(JFrame.NORMAL);
-	                }
-	            });
+	            
 	            popup.add(defaultItem);
 	            trayIcon=new TrayIcon(image, "Memoranda", popup);
 	            trayIcon.setImageAutoSize(true);
+	            
+	            defaultItem.addActionListener(new ActionListener() { //has to be here for only 1 instance in system tray
+	                public void actionPerformed(ActionEvent e) {
+	                    frame.setVisible(true);
+	                    frame.setExtendedState(JFrame.NORMAL);
+	                    tray.remove(trayIcon);
+	                }
+	            });
+	            try {
+            		tray.add(trayIcon);
+	                frame.dispose();
+	                System.out.println("added to System Tray");
+	            } catch (AWTException e) {
+	                System.out.println("Failed to add Memoranda to System Tray");
+	                System.err.println(e);
+	            }
 	        }else{
 	            System.out.println("system tray not supported");
 	        }

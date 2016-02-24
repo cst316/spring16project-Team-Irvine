@@ -686,13 +686,22 @@ public class AppFrame extends JFrame {
         System.exit(0);
     }
 
+/**
+ * Method: doClose
+ * Inputs: N/A
+ * Returns: N/A
+ *
+ * Description: handles the events which result in the window being closed, but memoranda not exiting
+ */
+
     public void doClose() {
-    	if(Configuration.get("ON_MINIMIZE").equals("normal")){
+    	if(Configuration.get("ON_MINIMIZE").equals("taskbar")){
     		System.out.println("minimize");
+    		App.doMinimize(false);
     	}else{
-    		System.out.println("exit");
-        	exitNotify();
-        	App.closeWindow();
+    		System.out.println("to tray");
+        	App.doMinimize(true);
+//        	App.closeWindow();
     	}
     }
 
@@ -707,24 +716,25 @@ public class AppFrame extends JFrame {
          dlg.setVisible(true);
     }
 
+/**
+ * Method:	processWindowEvent
+ * Inputs: WindowEvent e
+ * Returns: N/A
+ *
+ * Description: handles events at the window level (iconify/fullscreen/restore/close & exit)
+ */
+
     protected void processWindowEvent(WindowEvent e) {
         if (e.getID() == WindowEvent.WINDOW_CLOSING) {
             if (Configuration.get("ON_CLOSE").equals("exit")){
-            	System.out.println("exit application");
+            	System.out.println("exit event");
                 doExit();
             }else{
             	System.out.println("close window");
-            	doClose();
+            	App.doMinimize(true);
             }
         }else if ((e.getID() == WindowEvent.WINDOW_ICONIFIED)) {
-            if(Configuration.get("ON_MINIMIZE").equals("normal")){
-            	System.out.println("hide to tray");
-            	App.hideToTray();
-            }else{
-            	System.out.println("close window");
-            	doClose();
-            }
-
+        	System.out.println("minimize event");
             doClose();
         }else{
             super.processWindowEvent(e);

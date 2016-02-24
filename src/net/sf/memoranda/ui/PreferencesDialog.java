@@ -1,3 +1,11 @@
+/*
+ * File: 	PreferencesDialog	
+ * Author:	alexeya & CST316 2016 Spring A Team Irvine
+ * Date:	2/23/2016
+ * 
+ * Description: Preferences dialog popup
+ */
+
 package net.sf.memoranda.ui;
 
 import java.io.File;
@@ -14,6 +22,12 @@ import javax.swing.border.*;
 import java.awt.event.*;
 
 /*$Id: PreferencesDialog.java,v 1.16 2006/06/28 22:58:31 alexeya Exp $*/
+/**
+ * Class: PreferencesDialog	
+ * 
+ * Description: controls the appearance and behaviour of the preferences dialog
+ */
+
 public class PreferencesDialog extends JDialog {
 	JPanel topPanel = new JPanel(new BorderLayout());
 
@@ -152,9 +166,8 @@ public class PreferencesDialog extends JDialog {
 	}
 
 	void jbInit() throws Exception {
-		titledBorder1 = new TitledBorder(BorderFactory.createEtchedBorder(
-				Color.white, new Color(156, 156, 158)), Local
-				.getString("Sound"));
+		titledBorder1 = new TitledBorder(BorderFactory.createEtchedBorder(Color.white, new Color(156, 156, 158)),
+				Local.getString("Sound"));
 		this.setResizable(false);
 		// Build Tab1
 		jLabel1.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -534,33 +547,36 @@ public class PreferencesDialog extends JDialog {
 
 	}
 
+/**
+ * Method: setValues
+ * Inputs: N/A
+ * Returns: N/A
+ *
+ * Description: loads settings to preferences dialog from configuration hashtable
+ */
+
 	void setValues() {
-		enL10nChB.setSelected(!Configuration.get("DISABLE_L10N").toString()
-				.equalsIgnoreCase("yes"));
-		enSplashChB.setSelected(!Configuration.get("SHOW_SPLASH").toString()
-				.equalsIgnoreCase("no"));
-		enSystrayChB.setSelected(!Configuration.get("DISABLE_SYSTRAY")
-				.toString().equalsIgnoreCase("yes"));
-		startMinimizedChB.setSelected(Configuration.get("START_MINIMIZED")
-				.toString().equalsIgnoreCase("yes"));
-		firstdow.setSelected(Configuration.get("FIRST_DAY_OF_WEEK").toString()
-				.equalsIgnoreCase("mon"));
+		enL10nChB.setSelected(!Configuration.get("DISABLE_L10N").toString().equalsIgnoreCase("yes"));
+		enSplashChB.setSelected(!Configuration.get("SHOW_SPLASH").toString().equalsIgnoreCase("no"));
+		enSystrayChB.setSelected(!Configuration.get("DISABLE_SYSTRAY").toString().equalsIgnoreCase("yes"));
+		startMinimizedChB.setSelected(Configuration.get("START_MINIMIZED").toString().equalsIgnoreCase("yes"));
+		firstdow.setSelected(Configuration.get("FIRST_DAY_OF_WEEK").toString().equalsIgnoreCase("mon"));
 
 		enableCustomLF(false);
 		String lf = Configuration.get("LOOK_AND_FEEL").toString();
-		if (lf.equalsIgnoreCase("system"))
+		if (lf.equalsIgnoreCase("system")){
 			lfSystemRB.setSelected(true);
-		else if (lf.equalsIgnoreCase("default"))
+		}else if (lf.equalsIgnoreCase("default")){
 			lfJavaRB.setSelected(true);
-		else if (lf.length() > 0) {
+		}else if (lf.length() > 0) {
 			lfCustomRB.setSelected(true);
 			enableCustomLF(true);
 			lfClassName.setText(lf);
-		} else
+		} else{
 			lfJavaRB.setSelected(true);
+		}
 
-		askConfirmChB.setSelected(!Configuration.get("ASK_ON_EXIT").toString()
-				.equalsIgnoreCase("no"));
+		askConfirmChB.setSelected(!Configuration.get("ASK_ON_EXIT").toString().equalsIgnoreCase("no"));
 		String onclose = Configuration.get("ON_CLOSE").toString();
 		if (onclose.equals("exit")) {
 			this.closeExitRB.setSelected(true);
@@ -571,125 +587,143 @@ public class PreferencesDialog extends JDialog {
 		}
 
 		String onmin = Configuration.get("ON_MINIMIZE").toString();
-		this.minTaskbarRB.setSelected(true);
+		if(onmin.equals("hide")){
+			this.minHideRB.setSelected(true);
+		}else{
+			this.minTaskbarRB.setSelected(true);
+		}
 
-		if (!System.getProperty("os.name").startsWith("Win"))
-			this.browserPath.setText(MimeTypesList.getAppList()
-					.getBrowserExec());
+		if (!System.getProperty("os.name").startsWith("Win")){
+			this.browserPath.setText(MimeTypesList.getAppList().getBrowserExec());
+		}
+		
 		if (Configuration.get("NOTIFY_SOUND").equals("")) {
 			Configuration.put("NOTIFY_SOUND", "DEFAULT");
 		}
 
-		boolean enableSnd = !Configuration.get("NOTIFY_SOUND").toString()
-				.equalsIgnoreCase("DISABLED");
+		boolean enableSnd = !Configuration.get("NOTIFY_SOUND").toString().equalsIgnoreCase("DISABLED");
 		enableSoundCB.setSelected(enableSnd);
-		if (Configuration.get("NOTIFY_SOUND").toString().equalsIgnoreCase(
-				"DEFAULT")
-				|| Configuration.get("NOTIFY_SOUND").toString()
-						.equalsIgnoreCase("DISABLED")) {
+		if (Configuration.get("NOTIFY_SOUND").toString().equalsIgnoreCase("DEFAULT")
+				|| Configuration.get("NOTIFY_SOUND").toString() .equalsIgnoreCase("DISABLED")) {
 			this.soundDefaultRB.setSelected(true);
 			this.enableCustomSound(false);
-		} else if (Configuration.get("NOTIFY_SOUND").toString()
-				.equalsIgnoreCase("BEEP")) {
+		} else if (Configuration.get("NOTIFY_SOUND").toString().equalsIgnoreCase("BEEP")) {
 			this.soundBeepRB.setSelected(true);
 			this.enableCustomSound(false);
 		} else {
 			System.out.println(Configuration.get("NOTIFY_SOUND").toString());
 			this.soundCustomRB.setSelected(true);
-			this.soundFile
-					.setText(Configuration.get("NOTIFY_SOUND").toString());
+			this.soundFile.setText(Configuration.get("NOTIFY_SOUND").toString());
 			this.enableCustomSound(true);
 		}
 		this.enableSound(enableSnd);
 		
-		antialiasChB.setSelected(Configuration.get("ANTIALIAS_TEXT")
-				.toString().equalsIgnoreCase("yes"));
-		if (Configuration.get("NORMAL_FONT").toString().length() >0)
+		antialiasChB.setSelected(Configuration.get("ANTIALIAS_TEXT").toString().equalsIgnoreCase("yes"));
+		if (Configuration.get("NORMAL_FONT").toString().length() >0){
 			normalFontCB.setSelectedItem(Configuration.get("NORMAL_FONT").toString());
-		else
+		}else{
 			normalFontCB.setSelectedItem("serif");
-		if (Configuration.get("HEADER_FONT").toString().length() >0)
+		}
+		if (Configuration.get("HEADER_FONT").toString().length() >0){
 			headerFontCB.setSelectedItem(Configuration.get("HEADER_FONT").toString());
-		else
+		}else{
 			headerFontCB.setSelectedItem("sans-serif");
-		if (Configuration.get("MONO_FONT").toString().length() >0)
+		}
+		if (Configuration.get("MONO_FONT").toString().length() >0){
 			monoFontCB.setSelectedItem(Configuration.get("MONO_FONT").toString());
-		else
+		}else{
 			monoFontCB.setSelectedItem("monospaced");
-		if (Configuration.get("BASE_FONT_SIZE").toString().length() >0)
+		}
+		if (Configuration.get("BASE_FONT_SIZE").toString().length() >0){
 			baseFontSize.setValue(Integer.decode(Configuration.get("BASE_FONT_SIZE").toString()));
-		else
+		}else{
 			baseFontSize.setValue(new Integer(16));
+		}
 	}
+/**
+ * Method: apply
+ * Inputs: N/A
+ * Returns: N/A
+ *
+ * Description: Records preferences from settings dialog to Configuration hashtable
+ */
 
 	void apply() {
-		if (this.firstdow.isSelected())
+		if (this.firstdow.isSelected()){
 			Configuration.put("FIRST_DAY_OF_WEEK", "mon");
-		else
+		}else{
 			Configuration.put("FIRST_DAY_OF_WEEK", "sun");
+		}
 
-		if (this.enL10nChB.isSelected())
+		if (this.enL10nChB.isSelected()){
 			Configuration.put("DISABLE_L10N", "no");
-		else
+		}else{
 			Configuration.put("DISABLE_L10N", "yes");
+		}
 
-		if (this.enSplashChB.isSelected())
+		if (this.enSplashChB.isSelected()){
 			Configuration.put("SHOW_SPLASH", "yes");
-		else
+		}else{
 			Configuration.put("SHOW_SPLASH", "no");
+		}
 
-		if (this.enSystrayChB.isSelected())
+		if (this.enSystrayChB.isSelected()){
 			Configuration.put("DISABLE_SYSTRAY", "no");
-		else
+		}else{
 			Configuration.put("DISABLE_SYSTRAY", "yes");
+		}
 
-		if (this.startMinimizedChB.isSelected())
+		if (this.startMinimizedChB.isSelected()){
 			Configuration.put("START_MINIMIZED", "yes");
-		else
+		}else{
 			Configuration.put("START_MINIMIZED", "no");
+		}
 
-		if (this.askConfirmChB.isSelected())
+		if (this.askConfirmChB.isSelected()){
 			Configuration.put("ASK_ON_EXIT", "yes");
-		else
+		}else{
 			Configuration.put("ASK_ON_EXIT", "no");
+		}
 
-		if (this.closeExitRB.isSelected())
+		if (this.closeExitRB.isSelected()){
 			Configuration.put("ON_CLOSE", "exit");
-		else
+		}else{
 			Configuration.put("ON_CLOSE", "minimize");
-
-		Configuration.put("ON_MINIMIZE", "normal");
+		}
+		
+		if(this.minTaskbarRB.isSelected()){
+			Configuration.put("ON_MINIMIZE", "taskbar");
+		}else{
+			Configuration.put("ON_MINIMIZE", "hide");
+		}
 
 		String lf = Configuration.get("LOOK_AND_FEEL").toString();
 		String newlf = "";
 
-		if (this.lfSystemRB.isSelected())
+		if (this.lfSystemRB.isSelected()){
 			newlf = "system";
-		else if (this.lfJavaRB.isSelected())
+		}else if (this.lfJavaRB.isSelected()){
 			newlf = "default";
-		else if (this.lfCustomRB.isSelected())
+		}else if (this.lfCustomRB.isSelected()){
 			newlf = this.lfClassName.getText();
+		}
 
 		if (!lf.equalsIgnoreCase(newlf)) {
 			Configuration.put("LOOK_AND_FEEL", newlf);
 			try {
-				if (Configuration.get("LOOK_AND_FEEL").equals("system"))
-					UIManager.setLookAndFeel(UIManager
-							.getSystemLookAndFeelClassName());
-				else if (Configuration.get("LOOK_AND_FEEL").equals("default"))
-					UIManager.setLookAndFeel(UIManager
-							.getCrossPlatformLookAndFeelClassName());
-				else if (Configuration.get("LOOK_AND_FEEL").toString().length() > 0)
-					UIManager.setLookAndFeel(Configuration.get("LOOK_AND_FEEL")
-							.toString());
+				if (Configuration.get("LOOK_AND_FEEL").equals("system")){
+					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+				}else if (Configuration.get("LOOK_AND_FEEL").equals("default")){
+					UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+				}else if (Configuration.get("LOOK_AND_FEEL").toString().length() > 0){
+					UIManager.setLookAndFeel(Configuration.get("LOOK_AND_FEEL").toString());
+				}
 
 				SwingUtilities.updateComponentTreeUI(App.getFrame());
 
 			} catch (Exception e) {
 				Configuration.put("LOOK_AND_FEEL", lf);
-				new ExceptionDialog(
-						e,
-						"Error when initializing a pluggable look-and-feel. Default LF will be used.",
+				new ExceptionDialog(e, "Error when initializing a pluggable look-and-feel. Default LF will be used.",
 						"Make sure that specified look-and-feel library classes are on the CLASSPATH.");
 			}
 		}
@@ -699,20 +733,21 @@ public class PreferencesDialog extends JDialog {
 			CurrentStorage.get().storeMimeTypesList();
 		}
 
-		if (!this.enableSoundCB.isSelected())
+		if (!this.enableSoundCB.isSelected()){
 			Configuration.put("NOTIFY_SOUND", "DISABLED");
-		else if (this.soundDefaultRB.isSelected())
+		}else if (this.soundDefaultRB.isSelected()){
 			Configuration.put("NOTIFY_SOUND", "DEFAULT");
-		else if (this.soundBeepRB.isSelected())
+		}else if (this.soundBeepRB.isSelected()){
 			Configuration.put("NOTIFY_SOUND", "BEEP");
-		else if ((this.soundCustomRB.isSelected())
-				&& (this.soundFile.getText().trim().length() > 0))
+		}else if ((this.soundCustomRB.isSelected()) && (this.soundFile.getText().trim().length() > 0)){
 			Configuration.put("NOTIFY_SOUND", this.soundFile.getText().trim());
+		}
 
-		if (antialiasChB.isSelected())
+		if (antialiasChB.isSelected()){
 			Configuration.put("ANTIALIAS_TEXT", "yes");
-		else
+		}else{
 			Configuration.put("ANTIALIAS_TEXT", "no");
+		}
 		
 		Configuration.put("NORMAL_FONT", normalFontCB.getSelectedItem());
 		Configuration.put("HEADER_FONT", headerFontCB.getSelectedItem());
