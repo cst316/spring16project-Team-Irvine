@@ -1,8 +1,16 @@
 package net.sf.memoranda.ui;
 
+import java.awt.AWTException;
 import java.awt.Dimension;
 import java.awt.Frame;
+import java.awt.Image;
+import java.awt.MenuItem;
+import java.awt.PopupMenu;
+import java.awt.SystemTray;
 import java.awt.Toolkit;
+import java.awt.TrayIcon;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Calendar;
 
 import javax.swing.ImageIcon;
@@ -138,10 +146,68 @@ public class App {
 
 	}
 
+/**
+ * Method: closeWindow
+ * Inputs: N/A
+ * Returns: N/A
+ *
+ * Description: Closes Memoranda --- EXITS
+ */
 	public static void closeWindow() {
-		if (frame == null)
+		if (frame == null){
 			return;
+		}
 		frame.dispose();
+	}
+/**
+ * Method: doMinimize
+ * Inputs: 
+@param toTray	toSystem tray or not
+ * Returns: N/A
+ *
+ * Description: Allows Memoranda to minimize to the system tray if capable
+ */
+	public static void doMinimize(boolean toTray){
+		if(toTray){
+			if(SystemTray.isSupported()){
+				TrayIcon trayIcon;
+				SystemTray tray;
+				tray = SystemTray.getSystemTray();
+								
+				Image image = new ImageIcon(AppFrame.class.getResource("resources/icons/jnotes16.png")).getImage();
+	            ActionListener exitListener=new ActionListener() {
+	                public void actionPerformed(ActionEvent e) {
+	                    System.out.println("Exiting...");
+	                    System.exit(0);
+	                }
+	            };
+	            PopupMenu popup=new PopupMenu();
+	            MenuItem defaultItem=new MenuItem("Exit");
+	            defaultItem.addActionListener(exitListener);
+	            popup.add(defaultItem);
+	            defaultItem=new MenuItem("Open");
+	            
+	            popup.add(defaultItem);
+	            trayIcon=new TrayIcon(image, "Memoranda", popup);
+	            trayIcon.setImageAutoSize(true);
+	            
+	            defaultItem.addActionListener(new ActionListener() { //has to be here for only 1 instance in system tray
+	                public void actionPerformed(ActionEvent e) {
+	                    frame.setVisible(true);
+	                    frame.setExtendedState(JFrame.NORMAL);
+	                    tray.remove(trayIcon);
+	                }
+	            });
+	            try {
+            		tray.add(trayIcon);
+	                frame.dispose();
+	            } catch (AWTException e) {
+	                System.err.println(e);
+	            }
+	        }else{
+	            System.out.println("system tray not supported");
+	        }
+		}
 	}
 
 	/**

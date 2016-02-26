@@ -61,6 +61,7 @@ import nu.xom.Builder;
 import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Elements;
+import sun.security.krb5.Config;
 
 
 /**
@@ -135,9 +136,9 @@ public class AppFrame extends JFrame {
         }
     };//RW
 
-    public Action minimizeAction = new AbstractAction("Close the window") {
+    public Action closeAction = new AbstractAction("Close the window") {
         public void actionPerformed(ActionEvent e) {
-            doMinimize();
+            doClose();
         }
     };
 
@@ -200,7 +201,7 @@ public class AppFrame extends JFrame {
     JMenuItem jMenuFileImportPrj = new JMenuItem(importNotesAction);
     JMenuItem jMenuFileImportNote = new JMenuItem(importOneNoteAction);
     JMenuItem jMenuFileExportNote = new JMenuItem(workPanel.dailyItemsPanel.editorPanel.exportAction);
-    JMenuItem jMenuFileMin = new JMenuItem(minimizeAction);
+    JMenuItem jMenuFileMin = new JMenuItem(closeAction);
 
     JMenuItem jMenuItem1 = new JMenuItem();
     JMenuItem jMenuEditUndo = new JMenuItem(editor.undoAction);
@@ -669,6 +670,7 @@ public class AppFrame extends JFrame {
     
     //File | Exit action performed
     public void doExit() {
+    	System.out.println("EXITING");
         if (Configuration.get("ASK_ON_EXIT").equals("yes")) {
             Dimension frmSize = this.getSize();
             Point loc = this.getLocation();
@@ -690,12 +692,28 @@ public class AppFrame extends JFrame {
         System.exit(0);
     }
 
-    public void doMinimize() {
-        exitNotify();
-        App.closeWindow();
+/**
+ * Method: doClose
+ * Inputs: N/A
+ * Returns: N/A
+ *
+ * Description: handles the events which result in the window being closed, but memoranda not exiting
+ */
+
+    public void doClose() {
+    	if(Configuration.get("ON_MINIMIZE").equals("taskbar")){
+    		App.doMinimize(false);
+    	}else{
+        	App.doMinimize(true);
+    	}
     }
 
-    //Help | About action performed
+/**
+ * Method:  jMenuHelpAbout_actionPerformed
+ * Inputs: ActionEvent e
+ * @param e
+ * Return:N/A
+ */
     public void jMenuHelpAbout_actionPerformed(ActionEvent e) {
          AppFrame_AboutBox dlg = new AppFrame_AboutBox(this);        
          Dimension dlgSize = dlg.getSize();
@@ -706,17 +724,22 @@ public class AppFrame extends JFrame {
          dlg.setVisible(true);
     }
 
+/**
+ * Method:	processWindowEvent
+ * Inputs: WindowEvent e
+ * Returns: N/A
+ *
+ * Description: handles events at the window level (iconify/fullscreen/restore/close & exit)
+ */
     protected void processWindowEvent(WindowEvent e) {
         if (e.getID() == WindowEvent.WINDOW_CLOSING) {
             if (Configuration.get("ON_CLOSE").equals("exit")){
                 doExit();
             }else{
-            	doMinimize();
+            	App.doMinimize(true);
             }
         }else if ((e.getID() == WindowEvent.WINDOW_ICONIFIED)) {
-            super.processWindowEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-
-            doMinimize();
+            doClose();
         }else{
             super.processWindowEvent(e);
         }
