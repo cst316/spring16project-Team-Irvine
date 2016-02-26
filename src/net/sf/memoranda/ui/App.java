@@ -168,12 +168,10 @@ public class App {
  * Description: Allows Memoranda to minimize to the system tray if capable
  */
 	public static void doMinimize(boolean toTray){
-		System.out.println("ACTION: " + Configuration.get("ON_MINIMIZE").toString());
 		if(toTray){
 			if(SystemTray.isSupported()){
 				TrayIcon trayIcon;
 				SystemTray tray;
-				System.out.println("Minimize to tray");
 				tray = SystemTray.getSystemTray();
 								
 				Image image = new ImageIcon(AppFrame.class.getResource("resources/icons/jnotes16.png")).getImage();
@@ -203,9 +201,7 @@ public class App {
 	            try {
             		tray.add(trayIcon);
 	                frame.dispose();
-	                System.out.println("added to System Tray");
 	            } catch (AWTException e) {
-	                System.out.println("Failed to add Memoranda to System Tray");
 	                System.err.println(e);
 	            }
 	        }else{

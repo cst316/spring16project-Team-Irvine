@@ -696,16 +696,18 @@ public class AppFrame extends JFrame {
 
     public void doClose() {
     	if(Configuration.get("ON_MINIMIZE").equals("taskbar")){
-    		System.out.println("minimize");
     		App.doMinimize(false);
     	}else{
-    		System.out.println("to tray");
         	App.doMinimize(true);
-//        	App.closeWindow();
     	}
     }
 
-    //Help | About action performed
+/**
+ * Method:  jMenuHelpAbout_actionPerformed
+ * Inputs: ActionEvent e
+ * @param e
+ * Return:N/A
+ */
     public void jMenuHelpAbout_actionPerformed(ActionEvent e) {
          AppFrame_AboutBox dlg = new AppFrame_AboutBox(this);        
          Dimension dlgSize = dlg.getSize();
@@ -723,18 +725,14 @@ public class AppFrame extends JFrame {
  *
  * Description: handles events at the window level (iconify/fullscreen/restore/close & exit)
  */
-
     protected void processWindowEvent(WindowEvent e) {
         if (e.getID() == WindowEvent.WINDOW_CLOSING) {
             if (Configuration.get("ON_CLOSE").equals("exit")){
-            	System.out.println("exit event");
                 doExit();
             }else{
-            	System.out.println("close window");
             	App.doMinimize(true);
             }
         }else if ((e.getID() == WindowEvent.WINDOW_ICONIFIED)) {
-        	System.out.println("minimize event");
             doClose();
         }else{
             super.processWindowEvent(e);

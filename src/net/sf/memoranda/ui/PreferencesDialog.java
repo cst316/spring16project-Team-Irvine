@@ -25,7 +25,7 @@ import java.awt.event.*;
 /**
  * Class: PreferencesDialog	
  * 
- * Description: controls the appearance and behaviour of the preferences dialog
+ * Description: controls the appearance and behavior of the preferences dialog
  */
 
 public class PreferencesDialog extends JDialog {
@@ -554,7 +554,6 @@ public class PreferencesDialog extends JDialog {
  *
  * Description: loads settings to preferences dialog from configuration hashtable
  */
-
 	void setValues() {
 		enL10nChB.setSelected(!Configuration.get("DISABLE_L10N").toString().equalsIgnoreCase("yes"));
 		enSplashChB.setSelected(!Configuration.get("SHOW_SPLASH").toString().equalsIgnoreCase("no"));
@@ -580,10 +579,8 @@ public class PreferencesDialog extends JDialog {
 		String onclose = Configuration.get("ON_CLOSE").toString();
 		if (onclose.equals("exit")) {
 			this.closeExitRB.setSelected(true);
-			// this.askConfirmChB.setEnabled(true);
 		} else {
 			this.closeHideRB.setSelected(true);
-			// this.askConfirmChB.setEnabled(false);
 		}
 
 		String onmin = Configuration.get("ON_MINIMIZE").toString();
@@ -640,6 +637,7 @@ public class PreferencesDialog extends JDialog {
 			baseFontSize.setValue(new Integer(16));
 		}
 	}
+	
 /**
  * Method: apply
  * Inputs: N/A
@@ -647,7 +645,6 @@ public class PreferencesDialog extends JDialog {
  *
  * Description: Records preferences from settings dialog to Configuration hashtable
  */
-
 	void apply() {
 		if (this.firstdow.isSelected()){
 			Configuration.put("FIRST_DAY_OF_WEEK", "mon");
@@ -781,7 +778,6 @@ public class PreferencesDialog extends JDialog {
 		this.soundFileBrowseB.setEnabled(is && soundCustomRB.isSelected());
 		this.soundFile.setEnabled(is && soundCustomRB.isSelected());
 		this.jLabel6.setEnabled(is && soundCustomRB.isSelected());
-
 	}
 
 	void okB_actionPerformed(ActionEvent e) {
@@ -802,7 +798,7 @@ public class PreferencesDialog extends JDialog {
 	}
 
 	void closeExitRB_actionPerformed(ActionEvent e) {
-		// this.askConfirmChB.setEnabled(true);
+
 	}
 
 	void askConfirmChB_actionPerformed(ActionEvent e) {
@@ -810,7 +806,7 @@ public class PreferencesDialog extends JDialog {
 	}
 
 	void closeHideRB_actionPerformed(ActionEvent e) {
-		// this.askConfirmChB.setEnabled(false);
+
 	}
 
 	void lfSystemRB_actionPerformed(ActionEvent e) {
@@ -911,8 +907,9 @@ public class PreferencesDialog extends JDialog {
 		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		chooser.setPreferredSize(new Dimension(550, 375));
 		chooser.setFileFilter(new AllFilesFilter(AllFilesFilter.WAV));
-		if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
+		if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
 			this.soundFile.setText(chooser.getSelectedFile().getPath());
+		}
 	}
 
 	void soundDefaultRB_actionPerformed(ActionEvent e) {
@@ -935,8 +932,9 @@ public class PreferencesDialog extends JDialog {
         fonts.add("serif");
         fonts.add("sans-serif");
         fonts.add("monospaced");
-        for (int i = 0; i < envfonts.length; i++)
+        for (int i = 0; i < envfonts.length; i++){
             fonts.add(envfonts[i]);
+        }
 		return fonts;
 	}
 }
