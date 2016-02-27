@@ -1,7 +1,7 @@
 /**
  * File: AppFrame.java
  * Author: Rudi Wever
- * Date: February 10, 2016
+ * Date: February 10, 2016 (last modified February 27/2016)
  * Description: GUI definition and property settings for Memoranda Project
  */
 package net.sf.memoranda.ui;
@@ -81,6 +81,7 @@ public class AppFrame extends JFrame {
 
 	final int MINFRAMESIZEWIDTH = 1024;
 	final int MINFRAMESIZEHEIGHT = 500;
+	
     JPanel contentPane;
     JMenuBar menuBar = new JMenuBar();
     JMenu jMenuFile = new JMenu();
@@ -286,7 +287,78 @@ public class AppFrame extends JFrame {
             new ExceptionDialog(e);
         }
     }
-    //Component initialization
+    
+    /*
+     * expandProjectTitlePanel
+     * Inputs: none
+     * Outputs: none
+     * Description: expands Project Title Panel
+     */
+    private void expandProjectTitlePanel(){
+            if (prPanelExpanded) {
+                prPanelExpanded = false;
+                splitPane.setDividerLocation(28);
+            }else {
+                prPanelExpanded = true;
+                splitPane.setDividerLocation(0.2);
+            }
+     }
+    
+    /*
+     * setSize
+     * Inputs: none
+     * Outputs: none
+     * Description: sets size of initial frame
+     */
+    private void setSize(){
+    	Object fwo = Context.get("FRAME_WIDTH");
+        Object fho = Context.get("FRAME_HEIGHT");
+        if ((fwo != null) && (fho != null)) {
+            int w = new Integer((String) fwo).intValue();
+            int h = new Integer((String) fho).intValue();
+            this.setSize(w, h);
+        }
+        else{
+            this.setExtendedState(Frame.MAXIMIZED_BOTH);
+        }
+    }
+
+    /*
+     * setLocation
+     * Inputs: none
+     * Outputs: none
+     * Description: sets location of initial frame
+     */
+    private void setLocation (){
+        Object xo = Context.get("FRAME_XPOS");
+        Object yo = Context.get("FRAME_YPOS");
+        if ((xo != null) && (yo != null)) {
+            int x = new Integer((String) xo).intValue();
+            int y = new Integer((String) yo).intValue();
+            this.setLocation(x, y);
+        }
+    }
+    
+    /*
+     * setEditorMenus
+     * Inputs: none
+     * Output: none
+     * Description: toggles edit menu for notes
+     */
+    private void setEditorMenus(){
+        String pan = (String) Context.get("CURRENT_PANEL");
+        if (pan != null) {
+            workPanel.selectPanel(pan);
+            setEnabledEditorMenus(pan.equalsIgnoreCase("NOTES"));
+        }
+    }
+    
+    /*
+     * jbInit
+     * Inputs: none
+     * Outputs: none
+     * Description: initializes components on memoranda frame
+     */
     private void jbInit() throws Exception {
         this.setIconImage(new ImageIcon(AppFrame.class.getResource("resources/icons/jnotes16.png")).getImage());
         contentPane = (JPanel) this.getContentPane();
@@ -585,13 +657,15 @@ public class AppFrame extends JFrame {
 
         projectsPanel.AddExpandListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+         	expandProjectTitlePanel();
+/*
                 if (prPanelExpanded) {
                     prPanelExpanded = false;
                     splitPane.setDividerLocation(28);
                 }else {
                     prPanelExpanded = true;
                     splitPane.setDividerLocation(0.2);
-                }
+                }*/
             }
         });
 
@@ -615,30 +689,9 @@ public class AppFrame extends JFrame {
             }
         });
 
-        Object fwo = Context.get("FRAME_WIDTH");
-        Object fho = Context.get("FRAME_HEIGHT");
-        if ((fwo != null) && (fho != null)) {
-            int w = new Integer((String) fwo).intValue();
-            int h = new Integer((String) fho).intValue();
-            this.setSize(w, h);
-        }
-        else{
-            this.setExtendedState(Frame.MAXIMIZED_BOTH);
-        }
-
-        Object xo = Context.get("FRAME_XPOS");
-        Object yo = Context.get("FRAME_YPOS");
-        if ((xo != null) && (yo != null)) {
-            int x = new Integer((String) xo).intValue();
-            int y = new Integer((String) yo).intValue();
-            this.setLocation(x, y);
-        }
-
-        String pan = (String) Context.get("CURRENT_PANEL");
-        if (pan != null) {
-            workPanel.selectPanel(pan);
-            setEnabledEditorMenus(pan.equalsIgnoreCase("NOTES"));
-        }
+        setSize();
+        setLocation();
+        setEditorMenus();
 
         CurrentProject.addProjectListener(new ProjectListener() {
 
@@ -649,7 +702,7 @@ public class AppFrame extends JFrame {
                 setTitle("Memoranda - " + CurrentProject.get().getTitle());
             }
         });
-
+        
         Dimension minFrameSize = new Dimension();
         minFrameSize.width = MINFRAMESIZEWIDTH;
         minFrameSize.height = MINFRAMESIZEHEIGHT;
@@ -744,7 +797,7 @@ public class AppFrame extends JFrame {
             super.processWindowEvent(e);
         }
     }
-    
+
     @SuppressWarnings("unchecked")
 	public static void addExitListener(ActionListener al) {
         exitListeners.add(al);
@@ -930,6 +983,41 @@ public class AppFrame extends JFrame {
         dlg.setVisible(true);
     }
     
+    /*
+     * setExportDialog
+     * Inputs: JFileChooser chooser
+     * Outputs: Dialog box for exporting notes
+     * Description: creates a dialog box for exporting notes
+     */
+	private ProjectExportDialog setExportDialog (JFileChooser chooser){
+		ProjectExportDialog dlg = new ProjectExportDialog(App.getFrame(), Local.getString("Export notes"), chooser);
+	    String enc = (String) Context.get("EXPORT_FILE_ENCODING");
+	    if (enc != null){
+	            dlg.encCB.setSelectedItem(enc);
+	    }
+	    String spl = (String) Context.get("EXPORT_SPLIT_NOTES");
+	    if (spl != null){
+	            dlg.splitChB.setSelected(spl.equalsIgnoreCase("true"));
+	    }
+	    String ti = (String) Context.get("EXPORT_TITLES_AS_HEADERS");
+	    if (ti != null){
+	    	dlg.titlesAsHeadersChB.setSelected(ti.equalsIgnoreCase("true"));
+	    }
+	    Dimension dlgSize = new Dimension(550, 500);
+	    dlg.setSize(dlgSize);
+	    Dimension frmSize = App.getFrame().getSize();
+	    Point loc = App.getFrame().getLocation();
+	    dlg.setLocation((frmSize.width - dlgSize.width) / 2 + loc.x, (frmSize.height - dlgSize.height) / 2 + loc.y);
+	    dlg.setVisible(true);
+	    return dlg;
+	}
+	
+	/*
+	 * ppExport_actionPerformed
+	 * Input: ActionEvent e
+	 * Output: if user does not cancel, a file with memoranda notes is saved
+	 * Description: Gives user the opportunity to save memoranda notes to file.
+	 */
 	protected void ppExport_actionPerformed(ActionEvent e) {
 	    // Fix until Sun's JVM supports more locales...
 	    UIManager.put("FileChooser.lookInLabelText", Local.getString("Save in:"));
@@ -957,25 +1045,7 @@ public class AppFrame extends JFrame {
 	            chooser.setCurrentDirectory(new File(lastSel));       
 	    }
 	
-	    ProjectExportDialog dlg = new ProjectExportDialog(App.getFrame(), Local.getString("Export notes"), chooser);
-	    String enc = (String) Context.get("EXPORT_FILE_ENCODING");
-	    if (enc != null){
-	            dlg.encCB.setSelectedItem(enc);
-	    }
-	    String spl = (String) Context.get("EXPORT_SPLIT_NOTES");
-	    if (spl != null){
-	            dlg.splitChB.setSelected(spl.equalsIgnoreCase("true"));
-	    }
-	    String ti = (String) Context.get("EXPORT_TITLES_AS_HEADERS");
-	    if (ti != null){
-	    	dlg.titlesAsHeadersChB.setSelected(ti.equalsIgnoreCase("true"));
-	    }
-	    Dimension dlgSize = new Dimension(550, 500);
-	    dlg.setSize(dlgSize);
-	    Dimension frmSize = App.getFrame().getSize();
-	    Point loc = App.getFrame().getLocation();
-	    dlg.setLocation((frmSize.width - dlgSize.width) / 2 + loc.x, (frmSize.height - dlgSize.height) / 2 + loc.y);
-	    dlg.setVisible(true);
+	    ProjectExportDialog dlg = setExportDialog(chooser);
 	    if (dlg.CANCELLED){
 	    	return;
 	    }
@@ -985,7 +1055,8 @@ public class AppFrame extends JFrame {
         Context.put("EXPORT_TITLES_AS_HEADERS", new Boolean(dlg.titlesAsHeadersChB.isSelected()).toString());
 	    
 	    int ei = dlg.encCB.getSelectedIndex();
-	    enc = null;
+	    
+	    String enc = null;
 	    if (ei == 1){
 	    	enc = "UTF-8";
 	    }
@@ -996,6 +1067,66 @@ public class AppFrame extends JFrame {
 	     ProjectExporter.export(CurrentProject.get(), chooser.getSelectedFile(), enc, xhtml, 
 	    		 dlg.splitChB.isSelected(), true, nument, dlg.titlesAsHeadersChB.isSelected(), false); 
     }
+	
+	/*
+	 * fillNotesName
+	 * Inputs: Elements namelist, HashMap<String,String> notesName
+	 * Output: puts id and name into notesName
+	 * Description: iterates over namelist elements and places id and name into notesName.
+	 */
+    private void fillNotesName (Elements namelist, HashMap<String,String> notesName){
+        String id="", name="";
+        Element item;
+
+    	for(int i = 0;i<namelist.size();i++){
+            item = namelist.get(i);
+            id = item.getFirstChildElement("a").getAttributeValue("href").replace("\"","").replace("#","");
+            name = item.getValue();
+            notesName.put(id,name);
+        }
+        System.out.println("id: "+id+" name: "+name);
+    }
+    
+    /*
+     * fillNotesContent
+     * Inputs: Elements contlist, HashMap<String,String> notesContent
+     * Output: puts id and content into notesContent
+     * Description: iterates over contlist elements and places id and content into notesContent.
+     */
+    private void fillNotesContent (Elements contlist, HashMap<String,String> notesContent){
+        String id="", content = "";
+        Element item;
+
+        for(int i = 0;i<(contlist.size()-1);i++){
+            item = contlist.get(i);
+            id = item.getAttributeValue("name").replace("\"","");
+            content = item.getFirstChildElement("div").getValue();
+            notesContent.put(id,content);
+        }
+    }
+    
+    /*
+     * storeNote
+     * Inputs: HashMap<String,String> notesName, HashMap<String,String> notesContent
+     * Output: sets title and id and content of note
+     * Description: obtains notes for the editor pane.
+     */
+	private void obtainNotes (HashMap<String,String> notesName, HashMap<String,String> notesContent){
+	    String id="", name="", content = "";
+	    JEditorPane p = new JEditorPane();
+	    p.setContentType("text/html");
+	    for (Map.Entry<String,String> entry : notesName.entrySet()){
+	        id = entry.getKey();
+	        name = entry.getValue().substring(11);
+	        content = notesContent.get(id);
+	        p.setText(content);
+	        HTMLDocument doc = (HTMLDocument)p.getDocument();
+	        Note note = CurrentProject.getNoteList().createNoteForDate(CurrentDate.get());
+	        note.setTitle(name);
+	        note.setId(Util.generateId());
+	    	CurrentStorage.get().storeNote(note, doc);
+	    }
+	}
     /**
 	 * Method: ppImport_actionPerformed
 	 * Inputs: ActionEvent e mouse click on menu item Import One Note
@@ -1016,6 +1147,7 @@ public class AppFrame extends JFrame {
         UIManager.put("FileChooser.cancelButtonText", Local.getString("Cancel"));
         UIManager.put("FileChooser.cancelButtonToolTipText", Local.getString("Cancel"));
 
+        System.out.println("ppImport multiple notes");
         JFileChooser chooser = new JFileChooser();
         chooser.setFileHidingEnabled(false);
         chooser.setDialogTitle(Local.getString("Import notes"));
@@ -1055,35 +1187,17 @@ public class AppFrame extends JFrame {
             Elements namelist = names.getChildElements("li");
             Element item;
             
-            for(int i = 0;i<namelist.size();i++){
-                item = namelist.get(i);
-                id = item.getFirstChildElement("a").getAttributeValue("href").replace("\"","").replace("#","");
-                name = item.getValue();
-                notesName.put(id,name);
-            }
-            System.out.println("id: "+id+" name: "+name);
+            fillNotesName(namelist, notesName);
             
             Elements contlist = body.getChildElements("a");
-            for(int i = 0;i<(contlist.size()-1);i++){
-                item = contlist.get(i);
-                id = item.getAttributeValue("name").replace("\"","");
-                content = item.getFirstChildElement("div").getValue();
-                notesContent.put(id,content);
-            }
+            
+            fillNotesContent(contlist, notesContent);
 
-            JEditorPane p = new JEditorPane();
-            p.setContentType("text/html");
-            for (Map.Entry<String,String> entry : notesName.entrySet()){
-                id = entry.getKey();
-                name = entry.getValue().substring(11);
-                content = notesContent.get(id);
-                p.setText(content);
-                HTMLDocument doc = (HTMLDocument)p.getDocument();
-                Note note = CurrentProject.getNoteList().createNoteForDate(CurrentDate.get());
-                note.setTitle(name);
-                note.setId(Util.generateId());
-            	CurrentStorage.get().storeNote(note, doc);
-            }
+
+            obtainNotes(notesName, notesContent);
+            
+            
+            
             workPanel.dailyItemsPanel.notesControlPane.refresh();
         }catch(Exception exc){
             exc.printStackTrace();
