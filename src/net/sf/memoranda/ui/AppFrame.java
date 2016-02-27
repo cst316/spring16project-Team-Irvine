@@ -1061,7 +1061,6 @@ public class AppFrame extends JFrame {
 	    	enc = "UTF-8";
 	    }
 	    boolean nument = (ei == 2);
-	    File f = chooser.getSelectedFile();
 	    boolean xhtml = chooser.getFileFilter().getDescription().indexOf("XHTML") > -1;
 	     CurrentProject.save();
 	     ProjectExporter.export(CurrentProject.get(), chooser.getSelectedFile(), enc, xhtml, 
@@ -1179,13 +1178,11 @@ public class AppFrame extends JFrame {
         HashMap<String,String> notesContent = new HashMap<String,String>();
 
         Builder parser = new Builder();
-        String id="", name="", content = "";
         try{
             Document document = parser.build(f);
             Element body = document.getRootElement().getFirstChildElement("body");
             Element names = body.getFirstChildElement("div").getFirstChildElement("ul");
             Elements namelist = names.getChildElements("li");
-            Element item;
             
             fillNotesName(namelist, notesName);
             
