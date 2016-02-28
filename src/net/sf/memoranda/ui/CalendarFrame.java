@@ -30,7 +30,6 @@ public class CalendarFrame extends JInternalFrame {
     this.setClosable(true);
     this.setTitle(Local.getString("Select date"));
     this.setBorder(border1);
-    //this.setPreferredSize(new Dimension(200, 200));
     this.setToolTipText("");
     cal.setPreferredSize(new Dimension(this.getContentPane().getWidth(),
     this.getContentPane().getHeight()));

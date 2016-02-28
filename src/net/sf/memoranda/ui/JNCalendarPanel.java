@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.Calendar;
 import java.util.Enumeration;
+import java.util.Properties;
 import java.util.Vector;
 
 import javax.swing.AbstractAction;
@@ -24,6 +25,9 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.UtilDateModel;
 
 import net.sf.memoranda.CurrentProject;
 import net.sf.memoranda.NoteList;
@@ -60,7 +64,11 @@ public class JNCalendarPanel extends JPanel {
   BorderLayout borderLayout5 = new BorderLayout();
   JSpinner yearSpin = new JSpinner(new SpinnerNumberModel(jnCalendar.get().getYear(), 1980, 2999, 1));
   JSpinner.NumberEditor yearSpinner = new JSpinner.NumberEditor(yearSpin, "####");
-
+  
+  Properties p = new Properties();
+  UtilDateModel model = new UtilDateModel();
+  JDatePanelImpl datePanel;
+  
   boolean ignoreChange = false;
 
   private Vector selectionListeners = new Vector();
@@ -105,9 +113,15 @@ public class JNCalendarPanel extends JPanel {
   };
       
   void jbInit() throws Exception {
+	  p.put("text.today", "Today");
+	  p.put("text.month", "Month");
+	  p.put("text.year", "Year");
+	  datePanel = new JDatePanelImpl(model, p);
+	  this.add(datePanel,  BorderLayout.CENTER);
+	  
     //dayBackAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, KeyEvent.ALT_MASK));
     //dayForwardAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, KeyEvent.ALT_MASK));
-    todayAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_HOME, KeyEvent.ALT_MASK));
+    /*todayAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_HOME, KeyEvent.ALT_MASK));
     
     monthsCB.setRequestFocusEnabled(false);
     monthsCB.setMaximumRowCount(12);
@@ -193,12 +207,7 @@ public class JNCalendarPanel extends JPanel {
         setCurrentDateDay(jnCalendar.get(), jnCalendar.get().getDay());
       }
     });
-    /*CurrentDate.addChangeListener(new ActionListener()  {
-      public void actionPerformed(ActionEvent e) {
-        _date = CurrentDate.get();
-        refreshView();
-      }
-    });*/
+    
     monthsCB.setFont(new java.awt.Font("Dialog", 0, 11));
 
     monthsCB.addActionListener(new java.awt.event.ActionListener() {
@@ -222,7 +231,9 @@ public class JNCalendarPanel extends JPanel {
 
     refreshView();
     yearSpin.setBorder(border2);
-    
+    */
+	  
+	  
   }
 
   public void set(CalendarDate date) {
